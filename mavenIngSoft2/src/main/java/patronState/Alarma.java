@@ -24,20 +24,8 @@ public class Alarma implements Comparable<Alarma>{
 	}
 
 	public int compareTo(Alarma a) {
-
-		int retorno ;
 		Date alarmaDate = a.getHora();
-		Date actualDate=java.util.Calendar.getInstance().getTime();
-
-		if (alarmaDate.compareTo(actualDate) > 0) {
-			retorno = -1;
-		} 
-		if (alarmaDate.compareTo(actualDate) < 0) { //Si es antes la alarma que la fecha actual
-			retorno = 1;
-		} else {
-			retorno = 0;
-		}
-		return retorno;
+		return this.getHora().compareTo(alarmaDate);
 
 	}
 }

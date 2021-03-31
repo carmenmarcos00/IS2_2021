@@ -3,6 +3,7 @@ package patronState;
 public class Sonando extends AlarmasState {
 
 	public void entryAction(Alarmas context) {
+		
 	}
 	
 	public void exitAction(Alarmas context) {
@@ -10,6 +11,9 @@ public class Sonando extends AlarmasState {
 	
 	@Override
 	public void apagar(Alarmas context) {
+	}
+
+	public void doAction(Alarmas context) {
 	}
 
 	
