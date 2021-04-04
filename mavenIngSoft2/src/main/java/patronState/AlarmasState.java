@@ -9,17 +9,15 @@ public abstract class AlarmasState {
 	private static Desprogramado estadoDesprogramado = new Desprogramado();
 	
 	public static AlarmasState init(Alarmas context) {
-		//estadoDesprogramado necesita un do/entry? action que no haga nada
 		estadoDesprogramado.entryAction(context);
 		return estadoDesprogramado;
 	}
 	
 	public void nuevaAlarma(String id, Date hora, Alarmas context) {};
 	public void borraAlarma(String id, Alarmas context) {};
-	public void apagar(Alarmas context) {};
+	public void apagar(String id, Alarmas context) {};
 	public void alarmaOff(String id, Alarmas context) {};
 	public void alarmaOn(String id, Alarmas context) {};
-	
 	
 	public static AlarmasState getEstadoSonando() {
 		return estadoSonando;
@@ -30,5 +28,4 @@ public abstract class AlarmasState {
 	public static AlarmasState getEstadoDesprogramado() {
 		return estadoDesprogramado;
 	}
-
 }

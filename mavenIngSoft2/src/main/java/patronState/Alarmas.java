@@ -1,22 +1,16 @@
 package patronState;
-
 import java.util.Date;
-import java.util.HashMap;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 
 public class Alarmas {
 
-	//CAMBIAR PRIORITY QUEUE POR SORTED MAP ?
-	//ELIMINAR ALARMAS TOTALES ? 
-
-
 	private AlarmasState state;
+	
 	//Facil conseguir la alarma siguiente y ordenarlas en función del tiempo restante
 	private PriorityQueue<Alarma> alarmasActivas = new PriorityQueue<Alarma>();
-
-
 	//private SortedMap<String, Alarma> alarmasActivas = new TreeMap<>();
 	private List< Alarma> alarmasDesactivadas = new LinkedList<Alarma>();
 
@@ -35,8 +29,10 @@ public class Alarmas {
 	public void borraAlarma(String id, Alarmas context) {
 		state.borraAlarma(id, this);
 	}
-	public void apagar(Alarmas context) {
-		state.apagar(this);
+	
+	//NO SE SI CORRECTO AÑADIR ID PARA SABER QUE ALARMA DESACTIVAR
+	public void apagar(String id,Alarmas context) {
+		state.apagar(id, this);
 	}
 	public void alarmaOff(String id, Alarmas context) {
 		state.alarmaOff(id, this);
@@ -45,7 +41,18 @@ public class Alarmas {
 		state.alarmaOn(id, this);
 	}
 
-	//Implementacion de los método de negocio (REVISAR DATO QUE DEVUELVE TODOS VOID ESQUELETO)
+	//Implementacion de los método de negocio 
+	
+	
+	public Alarmas[] alarmasActivas () {
+		Alarmas[] alarmasActivasArr = (Alarmas[]) alarmasActivas.toArray();
+		return alarmasActivasArr;
+	}
+	
+	public Alarmas[] alarmasDesactivadas() {
+		Alarmas[] alarmasDesactivadasArr = (Alarmas[]) alarmasDesactivadas.toArray();
+		return alarmasDesactivadasArr;
+	}
 	/**
 	 * Método que devuelve la alarma en función del id
 	 * @param id
@@ -54,7 +61,6 @@ public class Alarmas {
 	public Alarma alarma(String id) {
 
 		Alarma alarmaBuscada = null;
-
 		//Busco si hay alguna alarma con ese id dentro de las alarmas activas (la cola)
 		for (Alarma alarm : alarmasActivas) { 
 			if (alarm.getId().equals(id)) {
@@ -73,7 +79,6 @@ public class Alarmas {
 		}
 		//Haya encontrado o no la alarma devuelvo alarmaBuscada
 		return alarmaBuscada;
-
 	}
 
 	//Contains reescribir equals (IMPORTANTE)
@@ -85,27 +90,26 @@ public class Alarmas {
 	 */
 	public boolean anhadeAlarma(Alarma alarmaAnhadir) {
 		Date hora = alarmaAnhadir.getHora();
-		String id = alarmaAnhadir.getId();
 		Alarma alarmaMismaHora = null;
 
 		//Tengo que buscar dentro de las alarmas activas y dentro de las alarmas desactivas si ya 
 		//existe una alarma para esa hora
-		//Busco si hay alguna alarma con ese id dentro de las alarmas activas (la cola)
+		//Busco si hay alguna alarma con esa hora dentro de las alarmas activas (la cola)
 		for (Alarma alarm : alarmasActivas) { 
 			if (alarm.getHora().equals(hora)) {
 				alarmaMismaHora = alarm;
 			}
 		}
-
+		//Busco si hay alguna alarma con esa hora dentro de alarmasDesactivadas
 		for (int i = 0; i<alarmasDesactivadas.size(); i++) {
 			if(alarmasDesactivadas.get(i).getHora().equals(hora)) {
 				alarmaMismaHora = alarmasDesactivadas.get(i);
 			}
 		}
-
+		//Si ha sido modificada la alarma en alguno de los bucles anteriores ya existe una alarma en esa hora
 		if(alarmaMismaHora != null) {
 			return false;
-		} else {
+		} else { //Si sigue a null no hay ninguna alarma para esa hora
 			alarmasActivas.add(alarmaAnhadir);
 			return true;
 		}
@@ -141,11 +145,24 @@ public class Alarmas {
 	 * @return alarma más próxima
 	 */
 	public Alarma alarmaMasProxima() {
-
 		if(alarmasActivas.size() == 0) {
 			return null;
 		}
 		return alarmasActivas.peek(); 
+	}
+	
+	/**
+	 * Método que activa una alarma ya existente que estaba desactivada
+	 * @param alarmaActivar alarma ya existente que hay que activa
+	 */
+	public void activaAlarma (Alarma alarmaActivar) {
+		//Metodo contains devuelve true si está la lista
+		boolean existe =alarmasDesactivadas.contains( alarmaActivar);
+		if (existe == true) {
+			alarmasDesactivadas.remove(alarmaActivar); //Elimino de desactivas
+			alarmasActivas.add(alarmaActivar); //Anhado a activas
+		}
+		
 	}
 
 	/**
@@ -153,7 +170,6 @@ public class Alarmas {
 	 * @param alarmaDesactivar alarma que quiero desactivar
 	 */
 	public void desactivaAlarma(Alarma alarmaDesactivar) {
-
 		//Método remove devuelve true si ha logrado eliminar la alarma (comprobación implicita)
 		boolean existe = alarmasActivas.remove(alarmaDesactivar); //Elimino alarma de activas
 		if (existe == true) {
@@ -173,10 +189,8 @@ public class Alarmas {
 	 * y lo elimina pasado 5 segundos
 	 * @throws InterruptedException
 	 */
-	public void desactivarMelodia() throws InterruptedException {
+	public void desactivarMelodia() {
 		System.out.println("Acaba de apagar la alarma");
-
 	}
-
 }
 

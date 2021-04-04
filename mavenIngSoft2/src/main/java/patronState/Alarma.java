@@ -18,7 +18,7 @@ public class Alarma implements Comparable<Alarma>{
 		return this.id;
 	}
 
-	//Mñetod getter de la hora de una alarma
+	//Método getter de la hora de una alarma
 	public Date getHora() {
 		return this.hora;
 	}
@@ -29,3 +29,6 @@ public class Alarma implements Comparable<Alarma>{
 
 	}
 }
+
+// Crear paquete con clase protegida  tR
+
