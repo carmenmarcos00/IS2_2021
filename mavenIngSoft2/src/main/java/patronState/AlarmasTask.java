@@ -15,7 +15,11 @@ public class AlarmasTask extends TimerTask {
 	//Método run heredado de la clase java.util.TimerTask
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+		Programado programado = (Programado) AlarmasState.getEstadoProgramado();
+		Sonando sonando = (Sonando) AlarmasState.getEstadoSonando();
+		programado.exitAction(context);
+		context.setState(sonando);
+		sonando.entryAction(context);
+		sonando.doAction(context);
 	}
-
 }

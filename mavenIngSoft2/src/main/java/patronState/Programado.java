@@ -1,9 +1,14 @@
 package patronState;
 
 import java.util.Date;
+import java.util.Timer;
+
 
 public class Programado extends AlarmasState {
-
+	private Alarma alarmaMasProxima;
+	protected Timer timer = new Timer();
+	protected AlarmasTask alarmasTask;
+	
 	@Override
 	public void alarmaOn(String id, Alarmas context) {
 
@@ -81,15 +86,25 @@ public class Programado extends AlarmasState {
 			//Fin acciones asociadas a la transicion
 			desprogramado.entryAction(context);
 			desprogramado.doAction(context);
-
-
 		}
 	}
 
 	public void entryAction(Alarmas context) {
-		//No tiene implementacion
-		//Definicion para posible futura implementacion
-		//Mejora modularidad y comprension del codigo
+		
+		//Si la he programado una nueva alarma y es antes que la que estaba con el timer, 
+		//elimino el timer para la anterior y creo otro timer para la mas proxima
+		if (alarmaMasProxima != context.alarmaMasProxima()) {
+			//Cancelo el evento temporizado
+			alarmasTask.cancel();
+			//Actualizo alarma mas proxima
+			alarmaMasProxima = context.alarmaMasProxima();
+			//Creo evento temporizado para la que acabo de poner
+			alarmasTask = new AlarmasTask(context);
+			timer.schedule(alarmasTask, alarmaMasProxima.getHora());
+			
+		//En caso contrario no hago nada
+		} else {
+		}
 	}
 
 	public void doAction(Alarmas context) {
@@ -104,3 +119,6 @@ public class Programado extends AlarmasState {
 		//Mejora modularidad y comprension del codigo
 	}
 }
+
+
+
