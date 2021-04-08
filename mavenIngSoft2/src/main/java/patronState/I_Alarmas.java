@@ -19,6 +19,8 @@ public interface I_Alarmas {
 	public Alarma[] alarmasDesactivadas();
 
 	public Alarma alarma(String id);
+	
+	public Alarma alarmaMasProxima();
 
 
 }

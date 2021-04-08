@@ -9,9 +9,13 @@ public class Sonando extends AlarmasState {
 		Programado programado =  (Programado) getEstadoProgramado();
 		this.exitAction(context);
 		context.setState(programado);
-		//Inicio acciones asociadas a la transicion
-		context.apagar();
-		//Fin acciones asociadas a la transicion
+
+		//Inicio de acciones asociadas a la transicion
+		Alarma alarma = context.alarmaMasProxima();
+		context.eliminaAlarma(alarma);
+		context.desactivarMelodia();
+		//Fin de acciones asociadas a la transicion
+		
 		programado.entryAction(context);
 		programado.doAction(context);
 	}
@@ -21,9 +25,9 @@ public class Sonando extends AlarmasState {
 	}
 
 	public void exitAction(Alarmas context) {
-		context.desactivarMelodia();
-		//context.eliminaAlarma(alarma);
-		//APAGAR NECESITARIA TENER EL ID DE LA ALARMA
+		
+
+
 	}
 
 	public void doAction(Alarmas context) {

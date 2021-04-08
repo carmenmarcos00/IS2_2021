@@ -69,7 +69,7 @@ public class GUI_Alarmas implements IGUI_Alarmas{
 		frmAplicacinAlarmas.setTitle("Aplicaci\u00F3n Alarmas");
 		frmAplicacinAlarmas.setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\Carmen\\Desktop\\IS2_2021\\IS2_2021\\mavenIngSoft2\\imagenes\\alarma-de-bombero.png"));
 		frmAplicacinAlarmas.setResizable(false);
-		frmAplicacinAlarmas.setBounds(100, 100, 578, 466);
+		frmAplicacinAlarmas.setBounds(100, 100, 578, 537);
 		frmAplicacinAlarmas.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
@@ -82,7 +82,7 @@ public class GUI_Alarmas implements IGUI_Alarmas{
 		//JPanel superior izquierda donde se crean las alarmas
 		JPanel panelNuevaAlarma = new JPanel();
 		panelNuevaAlarma.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panelNuevaAlarma.setBounds(20, 23, 254, 173);
+		panelNuevaAlarma.setBounds(20, 23, 254, 208);
 		panelCentral.add(panelNuevaAlarma);
 		panelNuevaAlarma.setLayout(null);
 		//Label de titulo
@@ -92,35 +92,35 @@ public class GUI_Alarmas implements IGUI_Alarmas{
 		panelNuevaAlarma.add(lblCrearNuevaAlarma);
 		//Label de introduccion de id de la nueva alarma
 		JLabel lblIdNuevaAlarma = new JLabel("Id Alarma");
-		lblIdNuevaAlarma.setBounds(20, 43, 80, 14);
+		lblIdNuevaAlarma.setBounds(20, 65, 80, 14);
 		panelNuevaAlarma.add(lblIdNuevaAlarma);
 		//Texto sin formateo para introducir el id
 		textIdAlarmaNueva = new JTextField();
-		textIdAlarmaNueva.setBounds(97, 40, 134, 20);
+		textIdAlarmaNueva.setBounds(97, 62, 134, 20);
 		panelNuevaAlarma.add(textIdAlarmaNueva);
 		textIdAlarmaNueva.setColumns(10);
 		//Label de introduccion de hora de la nueva alarma
 		JLabel lblHoralNuevaAlarma = new JLabel("Hora Alarma");
-		lblHoralNuevaAlarma.setBounds(20, 80, 77, 19);
+		lblHoralNuevaAlarma.setBounds(20, 106, 77, 19);
 		panelNuevaAlarma.add(lblHoralNuevaAlarma);
 
 		//Spinner para conseguir la hora que quiero
 		SpinnerDateModel model = new SpinnerDateModel(new Date(), null, null, Calendar.MINUTE);
 		spinnerHoraAlarma = new JSpinner(model);
 		spinnerHoraAlarma.setEditor(new JSpinner.DateEditor(spinnerHoraAlarma, "HH:mm"));
-		spinnerHoraAlarma.setBounds(97, 79, 134, 20);
+		spinnerHoraAlarma.setBounds(97, 105, 134, 20);
 		panelNuevaAlarma.add(spinnerHoraAlarma,  BorderLayout.NORTH);
 
 
 		//Boton para crear la nueva alarma
 		btnCrearAlarma = new JButton("Crear");
-		btnCrearAlarma.setBounds(79, 139, 84, 23);
+		btnCrearAlarma.setBounds(77, 174, 84, 23);
 		panelNuevaAlarma.add(btnCrearAlarma);
 
 		//JPanel superior derecha donde se activan alarmas desactivadas
 		JPanel panelAlarmasActivar = new JPanel();
 		panelAlarmasActivar.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panelAlarmasActivar.setBounds(290, 23, 254, 173);
+		panelAlarmasActivar.setBounds(290, 23, 254, 208);
 		panelCentral.add(panelAlarmasActivar);
 		panelAlarmasActivar.setLayout(null);
 		//Label del titulo del panel
@@ -138,11 +138,11 @@ public class GUI_Alarmas implements IGUI_Alarmas{
 		//Lista de donde se elije la alarma a activar
 		modelListDesactivadas = new DefaultListModel();
 		listAlarmasDesactivadas = new JList(modelListDesactivadas);
-		listAlarmasDesactivadas.setBounds(20, 61, 213, 66);
+		listAlarmasDesactivadas.setBounds(20, 61, 213, 102);
 		panelAlarmasActivar.add(listAlarmasDesactivadas);
 		//Boton para activar la alarma selecionada de la lista
 		btnActivarAlarma = new JButton("Activar");
-		btnActivarAlarma.setBounds(82, 139, 89, 23);
+		btnActivarAlarma.setBounds(82, 174, 89, 23);
 		panelAlarmasActivar.add(btnActivarAlarma);
 
 
@@ -150,7 +150,7 @@ public class GUI_Alarmas implements IGUI_Alarmas{
 		JPanel panelAlarmasDesactivar = new JPanel();
 		panelAlarmasDesactivar.setLayout(null);
 		panelAlarmasDesactivar.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panelAlarmasDesactivar.setBounds(290, 207, 254, 173);
+		panelAlarmasDesactivar.setBounds(290, 253, 254, 208);
 		panelCentral.add(panelAlarmasDesactivar);
 		//Label del titulo del panel 
 		JLabel lblDesactivarAlarma = new JLabel("DESACTIVAR ALARMA");
@@ -162,22 +162,22 @@ public class GUI_Alarmas implements IGUI_Alarmas{
 		JLabel lblEligeAlarmaDesactivar = new JLabel("Elige alarma a desactivar");
 		lblEligeAlarmaDesactivar.setBounds(10, 36, 204, 14);
 		panelAlarmasDesactivar.add(lblEligeAlarmaDesactivar);
-		//Lista de donde se elije la alarma a desactivar
 		
+		//Lista de donde se elije la alarma a desactivar
 		modelListActivas = new DefaultListModel();
 		listAlarmasActivas = new JList(modelListActivas);
-		listAlarmasActivas.setBounds(20, 62, 212, 66);
+		listAlarmasActivas.setBounds(20, 62, 212, 101);
 		panelAlarmasDesactivar.add(listAlarmasActivas);
 		//Boton para desactivar la alarma seleccionada de la lista
 		btnDesactivarAlarma = new JButton("Desactivar");
-		btnDesactivarAlarma.setBounds(74, 139, 101, 23);
+		btnDesactivarAlarma.setBounds(74, 174, 101, 23);
 		panelAlarmasDesactivar.add(btnDesactivarAlarma);
 
 		//Jpanel inferior izquierda donde se borran las alarmas
 		JPanel panelBorrarAlarma = new JPanel();
 		panelBorrarAlarma.setLayout(null);
 		panelBorrarAlarma.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panelBorrarAlarma.setBounds(20, 207, 254, 173);
+		panelBorrarAlarma.setBounds(20, 253, 254, 208);
 		panelCentral.add(panelBorrarAlarma);
 		//Label del titulo del panel
 		JLabel lblBorrarAlarma = new JLabel("BORRAR ALARMA");
@@ -192,18 +192,18 @@ public class GUI_Alarmas implements IGUI_Alarmas{
 
 		modelListTotal = new DefaultListModel();
 		listAlarmasTotales= new JList(modelListTotal);
-		listAlarmasTotales.setBounds(20, 62, 212, 66);
+		listAlarmasTotales.setBounds(20, 62, 212, 101);
 		panelBorrarAlarma.add(listAlarmasTotales);
 		//Boton para borrar la alarma seleccionada de la lista
 		btnBorrarAlarma = new JButton("Borrar");
-		btnBorrarAlarma.setBounds(79, 139, 84, 23);
+		btnBorrarAlarma.setBounds(79, 174, 84, 23);
 		panelBorrarAlarma.add(btnBorrarAlarma);
 
 
 		//Boton para apagar la alarma que esta sonando (intentar que solo salga cuando suene)
 		//O reemplazar por una ventana emergente cuando sea la hora
 		btnApagarAlarma = new JButton("APAGAR ALARMA");
-		btnApagarAlarma.setBounds(214, 391, 137, 29);
+		btnApagarAlarma.setBounds(214, 472, 137, 29);
 		panelCentral.add(btnApagarAlarma);
 	}
 

@@ -59,10 +59,10 @@ public class Desprogramado extends AlarmasState{
 		context.setState(this);
 		//Inicio acciones asociadas a la transicion
 		Alarma alarmaBorrar = context.alarma(id);
-		if (alarmaBorrar == null) {
+		if (alarmaBorrar == null) { //ESTA GESTIÓN DE ERRORES LA HAGO DE NUEVO EN LA GUI TODO
 			System.out.println("No puedo borrar una alarma que no existe");
 		} else {
-			context.borraAlarma(id);
+			context.eliminaAlarma(context.alarma(id));
 		}
 		//Fin acciones asociadas a la transicion
 		this.entryAction(context);
