@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 
-public class Alarmas {
+public class Alarmas implements I_Alarmas {
 
 	private AlarmasState state;
 	
@@ -25,14 +25,15 @@ public class Alarmas {
 	}
 	public void nuevaAlarma(String id, Date hora, Alarmas context) {
 		state.nuevaAlarma(id, hora, this);
+		System.out.println("Numero de alarmas Activas"+alarmasActivas.size());
 	}
 	public void borraAlarma(String id, Alarmas context) {
 		state.borraAlarma(id, this);
 	}
 	
 	//NO SE SI CORRECTO AÑADIR ID PARA SABER QUE ALARMA DESACTIVAR
-	public void apagar(String id,Alarmas context) {
-		state.apagar(id, this);
+	public void apagar(Alarmas context) {
+		state.apagar(this);
 	}
 	public void alarmaOff(String id, Alarmas context) {
 		state.alarmaOff(id, this);
@@ -44,14 +45,25 @@ public class Alarmas {
 	//Implementacion de los método de negocio 
 	
 	
-	public Alarmas[] alarmasActivas () {
-		Alarmas[] alarmasActivasArr = (Alarmas[]) alarmasActivas.toArray();
-		return alarmasActivasArr;
+	public Alarma[] alarmasActivas () {
+	     Alarma[] arr1 = new Alarma[alarmasActivas.size()];
+
+	      Alarma[] arr2 = alarmasActivas.toArray(arr1); 
+	      
+	      for (int i =0; i<arr2.length; i++) {
+	    	  System.out.println("Elemento "+i+" del array: Id "+ arr2[i].getId()+ ", Hora: " + arr2[i].getHora());
+	      }
+
+		return arr2;
 	}
 	
-	public Alarmas[] alarmasDesactivadas() {
-		Alarmas[] alarmasDesactivadasArr = (Alarmas[]) alarmasDesactivadas.toArray();
-		return alarmasDesactivadasArr;
+	public Alarma[] alarmasDesactivadas() {
+
+	     Alarma[] arr1 = new Alarma[alarmasDesactivadas.size()];
+
+	      Alarma[] arr2 = alarmasDesactivadas.toArray(arr1); 
+
+		return arr2;
 	}
 	/**
 	 * Método que devuelve la alarma en función del id

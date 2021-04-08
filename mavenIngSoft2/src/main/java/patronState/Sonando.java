@@ -5,11 +5,13 @@ package patronState;
 public class Sonando extends AlarmasState {
 
 	@Override
-	public void apagar(String id, Alarmas context) {
+	public void apagar( Alarmas context) {
 		Programado programado =  (Programado) getEstadoProgramado();
-		this.exitAction(id, context);
+		this.exitAction(context);
 		context.setState(programado);
-		//No hay acciones asociadas a la transicion
+		//Inicio acciones asociadas a la transicion
+		context.apagar(context);
+		//Fin acciones asociadas a la transicion
 		programado.entryAction(context);
 		programado.doAction(context);
 	}
@@ -18,10 +20,10 @@ public class Sonando extends AlarmasState {
 		context.activarMelodia();
 	}
 
-	public void exitAction(String id, Alarmas context) {
+	public void exitAction(Alarmas context) {
 		context.desactivarMelodia();
-		Alarma alarma = context.alarma(id);
-		context.eliminaAlarma(alarma);
+		//context.eliminaAlarma(alarma);
+		//APAGAR NECESITARIA TENER EL ID DE LA ALARMA
 	}
 
 	public void doAction(Alarmas context) {

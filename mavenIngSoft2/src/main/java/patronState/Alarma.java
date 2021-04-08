@@ -23,12 +23,22 @@ public class Alarma implements Comparable<Alarma>{
 		return this.hora;
 	}
 
+	//No me deja Override
 	public int compareTo(Alarma a) {
-		Date alarmaDate = a.getHora();
-		return this.getHora().compareTo(alarmaDate);
-
+		return getHora().compareTo(a.getHora());
+		//return this....?
 	}
+
+	@Override
+	public boolean equals (Object a) {
+		return id.equals(((Alarma)a).id);
+	}
+
+	@Override
+	public String toString() {
+		return "Alarma [id=" + id + ", hora=" + "]";
+	}
+
 }
 
-// Crear paquete con clase protegida  tR
 
