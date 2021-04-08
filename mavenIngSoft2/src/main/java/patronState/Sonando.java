@@ -10,7 +10,7 @@ public class Sonando extends AlarmasState {
 		this.exitAction(context);
 		context.setState(programado);
 		//Inicio acciones asociadas a la transicion
-		context.apagar(context);
+		context.apagar();
 		//Fin acciones asociadas a la transicion
 		programado.entryAction(context);
 		programado.doAction(context);

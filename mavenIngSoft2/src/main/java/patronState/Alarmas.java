@@ -23,22 +23,22 @@ public class Alarmas implements I_Alarmas {
 	public void setState(AlarmasState value) {
 		this.state = value;
 	}
-	public void nuevaAlarma(String id, Date hora, Alarmas context) {
+	public void nuevaAlarma(String id, Date hora) {
 		state.nuevaAlarma(id, hora, this);
-		System.out.println("Numero de alarmas Activas"+alarmasActivas.size());
+		
 	}
-	public void borraAlarma(String id, Alarmas context) {
+	public void borraAlarma(String id) {
 		state.borraAlarma(id, this);
 	}
 	
 	//NO SE SI CORRECTO AÑADIR ID PARA SABER QUE ALARMA DESACTIVAR
-	public void apagar(Alarmas context) {
+	public void apagar() {
 		state.apagar(this);
 	}
-	public void alarmaOff(String id, Alarmas context) {
+	public void alarmaOff(String id) {
 		state.alarmaOff(id, this);
 	}
-	public void alarmaOn(String id, Alarmas context) {
+	public void alarmaOn(String id) {
 		state.alarmaOn(id, this);
 	}
 
@@ -49,10 +49,11 @@ public class Alarmas implements I_Alarmas {
 	     Alarma[] arr1 = new Alarma[alarmasActivas.size()];
 
 	      Alarma[] arr2 = alarmasActivas.toArray(arr1); 
-	      
+	    /**  
 	      for (int i =0; i<arr2.length; i++) {
 	    	  System.out.println("Elemento "+i+" del array: Id "+ arr2[i].getId()+ ", Hora: " + arr2[i].getHora());
 	      }
+	      **/
 
 		return arr2;
 	}
@@ -204,5 +205,6 @@ public class Alarmas implements I_Alarmas {
 	public void desactivarMelodia() {
 		System.out.println("Acaba de apagar la alarma");
 	}
+
 }
 

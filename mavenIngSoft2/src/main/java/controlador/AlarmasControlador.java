@@ -16,6 +16,9 @@ public class AlarmasControlador {
 
 	private I_Alarmas alarmas;
 	private IGUI_Alarmas window;
+	private int indexModelTotal = 0;
+	private int indexModelActivas =0;
+	private int indexModelDesactivadas = 0;
 
 	public AlarmasControlador (I_Alarmas a, IGUI_Alarmas w) {
 
@@ -50,14 +53,17 @@ public class AlarmasControlador {
 				JOptionPane.showMessageDialog(null, "El id no puede estar vacío");
 			} else {
 				//En caso contrario creo la alarma y notifico
-				alarmas.nuevaAlarma(idAlarma, horaAlarma, (Alarmas)alarmas);
+				alarmas.nuevaAlarma(idAlarma, horaAlarma);
 				//Anhado el id de la alarma a las listas correspondientes
-				window.getModelListTotal().add(alarmas.alarmasDesactivadas().length + alarmas.alarmasDesactivadas().length , idAlarma);
-				window.getModelListActivas().add(alarmas.alarmasActivas().length -1 , idAlarma);
+				window.getModelListTotal().add(indexModelTotal , idAlarma);
+				window.getModelListActivas().add(indexModelActivas  , idAlarma);
+				indexModelActivas++;
+				indexModelTotal++;
+
 				JOptionPane.showMessageDialog(null, "Alarma con id: "+ idAlarma+ " ha sido añadida");
 			}
 			//Si no hay alarmas desactivadas, deshabilito el boton de activar alarmas
-			if(alarmas.alarmasDesactivadas().length == 0) {
+			if(indexModelDesactivadas == 0) {
 				window.getBtnActivar().setEnabled(false);
 			}
 		}
@@ -66,6 +72,7 @@ public class AlarmasControlador {
 	public class BorrarAlarmaListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
+			boolean bool = false;
 			//Consigo el id de la alarma que he seleccionado
 			String selected = (String) window.getListAlarmasTotales().getSelectedValue();
 
@@ -73,44 +80,48 @@ public class AlarmasControlador {
 			if (selected == null) {
 				JOptionPane.showMessageDialog(null, "No hay alarma seleccionada para borrar");
 				//En caso de que haya un id seleccionado lo borro y lo elimino de las listas
-				
+
 			} else {
 				int selectedIndex = window.getListAlarmasTotales().getSelectedIndex();//consigo el indice del id seleccionado
 				if (selectedIndex != -1) {
-					window.getModelListTotal().remove(selectedIndex); //Borro este elemento de la lista total
-					//Tengo que ver si esa alarma estaba en programado o en desprogramado para borrar de la otra lista
-					for (int i=0; i<=alarmas.alarmasActivas().length; i++) {
-						System.out.println(i);
-						System.out.println(alarmas.alarmasActivas()[i].getId());
-						System.out.println(alarmas.alarma(selected).getId());
-						if (alarmas.alarmasActivas()[i].getId().equals(alarmas.alarma(selected).getId())) { //La alarma esta en la lista de alarmas activas
-							System.out.println("Está en activas");
-							int selectedIndexSec = window.getListAlarmasActivas().getSelectedIndex();
-							if (selectedIndex != -1) {
-								window.getModelListActivas().remove(selectedIndexSec);
-							}
-						} else {
-							System.out.println("Está en desactivadas");
-							int selectedIndexSecD = window.getListAlarmasDesactivadas().getSelectedIndex();
-							if (selectedIndex != -1) {
-								window.getModelListDesactivadas().remove(selectedIndexSecD);
-							}
 
+					window.getModelListTotal().remove(selectedIndex); //Borro este elemento de la lista total
+					indexModelTotal--;
+
+					for (int i = 0; i <alarmas.alarmasActivas().length; i++) {
+						String idAlarmaIt = alarmas.alarmasActivas()[i].getId();
+
+						if (idAlarmaIt == selected) {
+							bool = true;
+						}
+					}
+
+					if (bool == true) { //Era una alarma activa
+						window.getModelListActivas().removeElement(selected);
+						indexModelActivas--;
+						JOptionPane.showMessageDialog(null, "Borrada de la lista de activas y de la lista de totales");
+						//Si al eliminarla no quedan más en activas, bloqueo el boton de desactivar
+						System.out.println(alarmas.alarmasActivas().length);
+						if (indexModelActivas == 0) {
+							window.getBtnDesactivar().setEnabled(false);
+						}
+					} else { //Era una alarma desactivada
+						window.getModelListDesactivadas().removeElement(selected);
+						indexModelDesactivadas--;
+						JOptionPane.showMessageDialog(null, "Borrada de la lista de desactivadas y de la lista de totales");
+						//Si al eliminarla no quedan más es desactivadas, bloqueo el boton de activar
+						//Si no hay alarmas desactivadas, deshabilito el boton de activar alarmas
+						if(indexModelDesactivadas == 0) {
+							window.getBtnActivar().setEnabled(false);
 						}
 					}
 				}
-				alarmas.borraAlarma(selected, (Alarmas)alarmas); //Borro la alarma
 			}
-
-
-			// TODO Auto-generated method stub	
-		}
-	}
-
-	public class AlarmaOnListener implements ActionListener {
-
-		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub	
+			//Si no hay ninguna alarma deshabilito la opcion de borrar alarmas
+			if (indexModelTotal == 0) {
+				window.getBtnBorrar().setEnabled(false);
+			}
+			alarmas.borraAlarma(selected); //Borro la alarma
 		}
 	}
 
@@ -121,11 +132,20 @@ public class AlarmasControlador {
 		}
 	}
 
+
+	public class AlarmaOnListener implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub	
+		}
+	}
+
+
 	public class ApagarAlarmaListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
 
-			alarmas.apagar((Alarmas) alarmas);
+			alarmas.apagar();
 			// TODO Auto-generated method stub	
 		}
 	}

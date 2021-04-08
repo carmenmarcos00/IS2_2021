@@ -62,7 +62,7 @@ public class Desprogramado extends AlarmasState{
 		if (alarmaBorrar == null) {
 			System.out.println("No puedo borrar una alarma que no existe");
 		} else {
-			context.borraAlarma(id, context);
+			context.borraAlarma(id);
 		}
 		//Fin acciones asociadas a la transicion
 		this.entryAction(context);
