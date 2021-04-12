@@ -18,7 +18,6 @@ public abstract class AlarmasState {
 	public void apagar(Alarmas context) {};
 	public void alarmaOff(String id, Alarmas context) {};
 	public void alarmaOn(String id, Alarmas context) {};
-	//IMPLEMENTO AQUI LOS METODOS ENTRY, DO, EXIT??? TODO
 	
 	
 	public static AlarmasState getEstadoSonando() {

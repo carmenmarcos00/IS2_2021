@@ -12,11 +12,12 @@ import java.util.PriorityQueue;
 public class Alarmas implements I_Alarmas {
 
 	private AlarmasState state;
-	//Patron observer con MVC
-	private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
+	private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);	//Patron observer con MVC
 
 	private PriorityQueue<Alarma> alarmasActivas = new PriorityQueue<Alarma>();
 	private List< Alarma> alarmasDesactivadas = new LinkedList<Alarma>();
+	
+	private final int INTERVALO_SONANDO = 5000; //	Intervalo de borrado de la alarma sonando
 
 	//Constructor de la clase Alarmas
 	public Alarmas() {
@@ -65,6 +66,7 @@ public class Alarmas implements I_Alarmas {
 		Alarma[] arr2 = alarmasDesactivadas.toArray(arr1); 
 		return arr2;
 	}
+	
 	/**
 	 * Método que devuelve la alarma en función del id
 	 * @param id
@@ -182,20 +184,18 @@ public class Alarmas implements I_Alarmas {
 	 * @param alarmaDesactivar alarma que quiero desactivar
 	 */
 	public void desactivaAlarma(Alarma alarmaDesactivar) {
-
+		/**
 		System.out.println("DESACTIVO ALARMA");
-
 		System.out.println("DESACTIVADAS ANTES: "+alarmasDesactivadas.size());
-		System.out.println("ACTIVAS ANTES: "+alarmasActivas.size());
+		System.out.println("ACTIVAS ANTES: "+alarmasActivas.size());**/
 
 		//Método remove devuelve true si ha logrado eliminar la alarma (comprobación implicita)
 		boolean existe = alarmasActivas.remove(alarmaDesactivar); //Elimino alarma de activas
 		if (existe == true) {
 			alarmasDesactivadas.add(alarmaDesactivar); //La anhado en desactivas
 		}
-		System.out.println("DESACTIVADAS DESPUES: "+alarmasDesactivadas.size());
-		System.out.println("ACTIVAS DESPUES: "+alarmasActivas.size());
-
+		/**System.out.println("DESACTIVADAS DESPUES: "+alarmasDesactivadas.size());
+		System.out.println("ACTIVAS DESPUES: "+alarmasActivas.size());**/
 	}
 
 	/**
@@ -212,12 +212,15 @@ public class Alarmas implements I_Alarmas {
 	 */
 	public void desactivarMelodia() {
 		System.out.println("Acaba de apagar la alarma");
-		//alarmasActivas.poll();
 	}
 
 	//Método que registra listeners
 	public void addPropertyChangeListener (PropertyChangeListener listener){
 		changeSupport.addPropertyChangeListener(listener);
+	}
+
+	public int getIntervalo() {
+		return INTERVALO_SONANDO;
 	}
 }
 

@@ -9,6 +9,8 @@ public class Programado extends AlarmasState {
 	protected Timer timer = new Timer();
 	protected AlarmasTask alarmasTask;
 
+
+
 	@Override
 	public void alarmaOn(String id, Alarmas context) {
 		Programado programado =  (Programado) getEstadoProgramado();
@@ -19,9 +21,9 @@ public class Programado extends AlarmasState {
 		Alarma alarmaActivar = context.alarma(id);
 		context.activaAlarma(alarmaActivar);
 		//Fin acciones asociadas a la transicion
-		
-		
-		programado.entryAction(context);//Cuando la activo, puede ser que sea la siguiente en sonar y tengo que reajustar el timer (lo hace entry)
+
+
+		programado.entryAction(context);//Cuando la activo, puede ser que sea la siguiente en sonar y tengo que reajustar el timer
 		programado.doAction(context);
 
 	}
@@ -31,64 +33,47 @@ public class Programado extends AlarmasState {
 
 		this.exitAction(context);
 		Alarma alarmaDesactivar = context.alarma(id);
-		//Dependiendo de si quedan alarmas activas o no, cambio de estado o me quedo
-		if(context.alarmasActivas().length > 1) { //Me quedo en estado programado porque quedan alarmas activas
+		//Elijo estado destino
+		if(context.alarmasActivas().length > 1) { //Programado (>1 porque elimino dentro)
 			Programado programado =  (Programado) getEstadoProgramado();
 			context.setState(programado);
-			//Inicio acciones asociadas a la transicion
 			context.desactivaAlarma(alarmaDesactivar);
-			
-			//Cuando la desactivo puede ser que sea la alarma que tocaba que sonase, entonces pasar timer a siguiente alarma programada
-			if(alarmaMasProxima.equals(alarmaDesactivar)) {
-				alarmasTask.cancel(); //Cancelo el timerTask
-				alarmaMasProxima = context.alarmaMasProxima();//Actualizo alarma más proxima
-				alarmasTask = new AlarmasTask(context); //Creo evento temporizado para la que acabo de poner
-				timer.schedule(alarmasTask, alarmaMasProxima.getHora()); //Inicializo cuenta atrás
-			}
-			//Fin acciones asociadas a la transicion
-			
 			programado.entryAction(context);
 			programado.doAction(context);
 
-		} else {
-
+		} else { //Desprogramado
 			Desprogramado desprogramado =  (Desprogramado) getEstadoDesprogramado();
 			context.setState(desprogramado);
-			//Inicio acciones asociadas a la transicion
-			context.desactivaAlarma(alarmaDesactivar);
-			
-			//Cuando la desactivo puede ser que sea la alarma que tocaba que sonase, entonces pasar timer a siguiente alarma programada
-			if(alarmaMasProxima.equals(alarmaDesactivar)) {
-				alarmasTask.cancel(); //Cancelo el timerTask
-				alarmaMasProxima = context.alarmaMasProxima();//Actualizo alarma más proxima
-				if (alarmaMasProxima == null) {//En caso de que no haya otra alarma para programar
-					
-				} else { //En caso de que allá alguna alarma más programada
-					alarmasTask = new AlarmasTask(context); //Creo evento temporizado para la que acabo de poner
-					timer.schedule(alarmasTask, alarmaMasProxima.getHora()); //Inicializo cuenta atrás //TODO AAQUI 
-				}
+			context.desactivaAlarma(alarmaDesactivar);//Llamo a método de negocio asociado (transicion)
 
+			if(alarmaMasProxima.equals(alarmaDesactivar)) { //Si alarma eliminada tenía el timer, reprogramo
+				alarmasTask.cancel();
+				alarmaMasProxima = context.alarmaMasProxima();//Actualizo alarma más proxima (siempre es null)
 			}
-			//Fin acciones asociadas a la transicion
-
 			desprogramado.entryAction(context);
 			desprogramado.doAction(context);
-
 		}
 	}
 
 	@Override
 	public void nuevaAlarma(String id, Date hora, Alarmas context) {
-		Programado programado = (Programado) getEstadoProgramado();
 
 		this.exitAction(context);
-		context.setState(programado);
-		//Inicio acciones asociadas a la transicion
-		Alarma nuevaAlarma = new Alarma (id, hora); //Creo la nueva alarma
-		context.anhadeAlarma(nuevaAlarma);//Llamo a método de negocio asociado
-		//Fin acciones asociadas a la transicion
-		programado.entryAction(context);
-		programado.doAction(context);
+		context.anhadeAlarma( new Alarma (id, hora)); //Llamo a método de negocio asociado (transicion)
+
+		//Elijo estado destino
+		if (context.alarmasActivas().length == 0) { 
+			Desprogramado desprogramado = (Desprogramado) getEstadoDesprogramado();
+			context.setState(desprogramado);
+			desprogramado.entryAction(context);
+			desprogramado.doAction(context);
+
+		} else {
+			Programado programado = (Programado) getEstadoProgramado();
+			context.setState(programado);
+			programado.entryAction(context);
+			programado.doAction(context);
+		}
 	}
 
 	@Override
@@ -96,50 +81,43 @@ public class Programado extends AlarmasState {
 
 		this.exitAction(context);
 		Alarma alarmaBorrar = context.alarma(id);
-		//Dependiendo de si quedan alarmas activas o no, cambio de estado o me quedo
-		if(context.alarmasActivas().length > 1) { //Me quedo en estado programado porque quedan alarmas activas
-			Programado programado = (Programado) getEstadoProgramado();
-			context.setState(programado);
-			//Inicio acciones asociadas a la transicion
-			context.eliminaAlarma(alarmaBorrar);
-			//Fin acciones asociadas a la transicion
-			programado.entryAction(context);
-			programado.doAction(context);
 
-		} else {
+		//Elijo estado destino
+		if(context.alarmasActivas().length == 0) {  //Estado desprogramado
+
 			Desprogramado desprogramado =  (Desprogramado) getEstadoDesprogramado();
 			context.setState(desprogramado);
-			//Inicio acciones asociadas a la transicion
-			context.eliminaAlarma(alarmaBorrar);
-			//Fin acciones asociadas a la transicion
+			context.eliminaAlarma(alarmaBorrar); //Llamo a método de negocio asociado (transicion)
 			desprogramado.entryAction(context);
 			desprogramado.doAction(context);
+
+		} else { //Estado programado
+
+			Programado programado = (Programado) getEstadoProgramado();
+			context.setState(programado);
+			context.eliminaAlarma(alarmaBorrar);//Llamo a método de negocio asociado (transicion)
+			programado.entryAction(context);
+			programado.doAction(context);
 		}
 	}
 
-	public void entryAction(Alarmas context) {
-
-		if (context.alarmaMasProxima() == null) { //En el caso de que no haya más alarmas no inicio el timer
+	public void entryAction(Alarmas context) { //Compruebo que el timer le tenga la alarma masProxima
+		//Compruebo si ha cambiado la alarma más proxima
+		
+		if(context.alarmaMasProxima() == null) {//Si viene de estado sonando
 			alarmaMasProxima = null;
-		} else {
-			//Si la he programado una nueva alarma y es antes que la que estaba con el timer, 
-			//elimino el timer para la anterior y creo otro timer para la mas proxima
-			if (alarmaMasProxima != context.alarmaMasProxima()) {
-				//Cancelo el evento temporizado
-				if (alarmasTask != null) {
+		}else {
+			if (alarmaMasProxima != context.alarmaMasProxima()) {//Se ha cambiado y reprogramo
+				if (alarmasTask != null) { //Cancelo el evento temporizado
 					alarmasTask.cancel();
 				}
-				//Actualizo alarma mas proxima
-				alarmaMasProxima = context.alarmaMasProxima();
-				//Creo evento temporizado para la que acabo de poner
-				alarmasTask = new AlarmasTask(context);
-				timer.schedule(alarmasTask, alarmaMasProxima.getHora());
-
-				//En caso contrario no hago nada
-			} else {
-			}
+				alarmaMasProxima = context.alarmaMasProxima();//Actualizo 
+				alarmasTask = new AlarmasTask(context); //Creo nuevo evento 
+				timer.schedule(alarmasTask, alarmaMasProxima.getHora()); //Programo timer
+			} 
 		}
 	}
+
 
 	public void doAction(Alarmas context) {
 		//No tiene implementacion

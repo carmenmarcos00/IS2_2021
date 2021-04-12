@@ -218,8 +218,6 @@ public class AlarmasControlador {
 		}
 	}
 
-	//Anhadir a magicdraw implementacion MVC?? TODO
-
 	//Clase Listener de Apagar alarma
 	public class ApagarAlarmaListener implements ActionListener {
 
@@ -238,7 +236,7 @@ public class AlarmasControlador {
 				window.getModelListTotal().removeElement(alarma.getId());
 				indexModelTotal--;
 
-				alarmas.apagar(); //ESTA LLAMADA DA PROBLEMAS TODO
+				alarmas.apagar();
 				JOptionPane.showMessageDialog(null, "La alarma que estaba sonando ya está apagada");
 
 				window.getBtnActivar().setEnabled(true);
