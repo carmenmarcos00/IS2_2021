@@ -61,8 +61,13 @@ public class Programado extends AlarmasState {
 			if(alarmaMasProxima.equals(alarmaDesactivar)) {
 				alarmasTask.cancel(); //Cancelo el timerTask
 				alarmaMasProxima = context.alarmaMasProxima();//Actualizo alarma más proxima
-				alarmasTask = new AlarmasTask(context); //Creo evento temporizado para la que acabo de poner
-				timer.schedule(alarmasTask, alarmaMasProxima.getHora()); //Inicializo cuenta atrás
+				if (alarmaMasProxima == null) {//En caso de que no haya otra alarma para programar
+					
+				} else { //En caso de que allá alguna alarma más programada
+					alarmasTask = new AlarmasTask(context); //Creo evento temporizado para la que acabo de poner
+					timer.schedule(alarmasTask, alarmaMasProxima.getHora()); //Inicializo cuenta atrás //TODO AAQUI 
+				}
+
 			}
 			//Fin acciones asociadas a la transicion
 

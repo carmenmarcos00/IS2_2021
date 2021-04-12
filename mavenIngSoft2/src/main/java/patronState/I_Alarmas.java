@@ -1,5 +1,6 @@
 package patronState;
 
+import java.beans.PropertyChangeListener;
 import java.util.Date;
 
 import vista.IGUI_Alarmas;
@@ -24,6 +25,6 @@ public interface I_Alarmas {
 	
 	public Alarma alarmaMasProxima();
 
-	public void setObservador(IGUI_Alarmas o);
+	public void addPropertyChangeListener (PropertyChangeListener listener);
 
 }

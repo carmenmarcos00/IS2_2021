@@ -49,6 +49,5 @@ public interface IGUI_Alarmas {
 	public DefaultListModel getModelListActivas();
 	
 	public DefaultListModel getModelListDesactivadas();
-	
-	public void update();
+
 }

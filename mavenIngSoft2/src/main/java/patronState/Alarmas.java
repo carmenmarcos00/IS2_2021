@@ -1,17 +1,19 @@
 package patronState;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.Date;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 
-import vista.IGUI_Alarmas;
 
 
 public class Alarmas implements I_Alarmas {
 
 	private AlarmasState state;
-	private IGUI_Alarmas interfaz;
+	//Patron observer con MVC
+	private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
 	private PriorityQueue<Alarma> alarmasActivas = new PriorityQueue<Alarma>();
 	private List< Alarma> alarmasDesactivadas = new LinkedList<Alarma>();
@@ -23,16 +25,17 @@ public class Alarmas implements I_Alarmas {
 
 	//Implementacion de los métodos de señal
 	public void setState(AlarmasState value) {
+		AlarmasState antiguo = this.state;
 		this.state = value;
 		if (value instanceof Sonando) { //Patrón observer
-			interfaz.update();
+			changeSupport.firePropertyChange("state",antiguo,value); //Notifico
 		}
 	}
-	
+
 	public void nuevaAlarma(String id, Date hora) {
 		state.nuevaAlarma(id, hora, this);
 	}
-	
+
 	public void borraAlarma(String id) {
 		state.borraAlarma(id, this);
 	}
@@ -40,7 +43,7 @@ public class Alarmas implements I_Alarmas {
 	public void apagar() {
 		state.apagar(this);
 	}
-	
+
 	public void alarmaOff(String id) {
 		state.alarmaOff(id, this);
 	}
@@ -51,7 +54,7 @@ public class Alarmas implements I_Alarmas {
 	//Implementacion de los método de negocio 
 
 	public Alarma[] alarmasActivas () {
-		
+
 		Alarma[] arr1 = new Alarma[alarmasActivas.size()];
 		Alarma[] arr2 = alarmasActivas.toArray(arr1); 
 		return arr2;
@@ -132,26 +135,20 @@ public class Alarmas implements I_Alarmas {
 
 		//Saco el id de la alarma que quiero eliminar para buscar si existe
 		String idAlarmaEliminar = alarmaEliminar.getId();
-
 		//LLamo al método alarma para ver si existe esa alarma por el id
 		Alarma alarma =alarma(idAlarmaEliminar);
-		System.out.println("BORRO ALARMA");
-		System.out.println("DESACTIVADAS ANTES: "+alarmasDesactivadas.size());
-		System.out.println("ACTIVAS ANTES: "+alarmasActivas.size());
 
 		//Si no existe retorno false, no puedo eliminar
 		if (alarma == null) {
-			return false; //TODO PREGUNTAR A PATRICIA SI ELIMINO LA GESTION DE AQUI
+			return false; 
 
 			//Si existe tengo que ver si la elimino de Desactivadas o de activadas	
-		} else if (alarmasDesactivadas.equals(alarmaEliminar)) { //Borro de desactivadas
+		} else if (alarmasDesactivadas.contains(alarmaEliminar)) { //Borro de desactivadas
 			alarmasDesactivadas.remove(alarmaEliminar);
 			return true;
-			
+
 		} else { //Borro de activadas
 			alarmasActivas.remove(alarmaEliminar); 
-			System.out.println("DESACTIVADAS DESPUES: "+alarmasDesactivadas.size());
-			System.out.println("ACTIVAS DESPUES: "+alarmasActivas.size());
 			return true;
 		}	
 	}
@@ -187,7 +184,7 @@ public class Alarmas implements I_Alarmas {
 	public void desactivaAlarma(Alarma alarmaDesactivar) {
 
 		System.out.println("DESACTIVO ALARMA");
-	
+
 		System.out.println("DESACTIVADAS ANTES: "+alarmasDesactivadas.size());
 		System.out.println("ACTIVAS ANTES: "+alarmasActivas.size());
 
@@ -217,10 +214,10 @@ public class Alarmas implements I_Alarmas {
 		System.out.println("Acaba de apagar la alarma");
 		//alarmasActivas.poll();
 	}
-	
-	public void setObservador(IGUI_Alarmas o) {
-		interfaz = o;
-		}
 
+	//Método que registra listeners
+	public void addPropertyChangeListener (PropertyChangeListener listener){
+		changeSupport.addPropertyChangeListener(listener);
+	}
 }
 
