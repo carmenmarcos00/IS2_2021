@@ -5,13 +5,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 
+import vista.IGUI_Alarmas;
+
+
 public class Alarmas implements I_Alarmas {
 
 	private AlarmasState state;
+	private IGUI_Alarmas interfaz;
 
-	//Facil conseguir la alarma siguiente y ordenarlas en función del tiempo restante
 	private PriorityQueue<Alarma> alarmasActivas = new PriorityQueue<Alarma>();
-	//private SortedMap<String, Alarma> alarmasActivas = new TreeMap<>();
 	private List< Alarma> alarmasDesactivadas = new LinkedList<Alarma>();
 
 	//Constructor de la clase Alarmas
@@ -22,19 +24,23 @@ public class Alarmas implements I_Alarmas {
 	//Implementacion de los métodos de señal
 	public void setState(AlarmasState value) {
 		this.state = value;
+		if (value instanceof Sonando) { //Patrón observer
+			interfaz.update();
+		}
 	}
+	
 	public void nuevaAlarma(String id, Date hora) {
 		state.nuevaAlarma(id, hora, this);
-
 	}
+	
 	public void borraAlarma(String id) {
 		state.borraAlarma(id, this);
 	}
 
-	//NO SE SI CORRECTO AÑADIR ID PARA SABER QUE ALARMA DESACTIVAR
 	public void apagar() {
 		state.apagar(this);
 	}
+	
 	public void alarmaOff(String id) {
 		state.alarmaOff(id, this);
 	}
@@ -44,26 +50,16 @@ public class Alarmas implements I_Alarmas {
 
 	//Implementacion de los método de negocio 
 
-
 	public Alarma[] alarmasActivas () {
+		
 		Alarma[] arr1 = new Alarma[alarmasActivas.size()];
-
 		Alarma[] arr2 = alarmasActivas.toArray(arr1); 
-		/**  
-	      for (int i =0; i<arr2.length; i++) {
-	    	  System.out.println("Elemento "+i+" del array: Id "+ arr2[i].getId()+ ", Hora: " + arr2[i].getHora());
-	      }
-		 **/
-
 		return arr2;
 	}
 
 	public Alarma[] alarmasDesactivadas() {
-
 		Alarma[] arr1 = new Alarma[alarmasDesactivadas.size()];
-
 		Alarma[] arr2 = alarmasDesactivadas.toArray(arr1); 
-
 		return arr2;
 	}
 	/**
@@ -94,7 +90,6 @@ public class Alarmas implements I_Alarmas {
 		return alarmaBuscada;
 	}
 
-	//Contains reescribir equals (IMPORTANTE)
 	/**
 	 * Añade una nueva alarma preparada para sonar.
 	 * @param alarmaAñadir
@@ -105,6 +100,7 @@ public class Alarmas implements I_Alarmas {
 		Date hora = alarmaAnhadir.getHora();
 		Alarma alarmaMismaHora = null;
 
+		//TODO GESTION DE QUE YA EXISTA ALARMA A ESA HORA (PROPAGAR?? O IGNORO)
 		//Tengo que buscar dentro de las alarmas activas y dentro de las alarmas desactivas si ya 
 		//existe una alarma para esa hora
 		//Busco si hay alguna alarma con esa hora dentro de las alarmas activas (la cola)
@@ -121,7 +117,7 @@ public class Alarmas implements I_Alarmas {
 		}
 		//Si ha sido modificada la alarma en alguno de los bucles anteriores ya existe una alarma en esa hora
 		if(alarmaMismaHora != null) {
-			return false;
+			return false; //GESTION YA EXISTE ALARMA A ESA HORA
 		} else { //Si sigue a null no hay ninguna alarma para esa hora
 			alarmasActivas.add(alarmaAnhadir);
 			return true;
@@ -145,27 +141,19 @@ public class Alarmas implements I_Alarmas {
 
 		//Si no existe retorno false, no puedo eliminar
 		if (alarma == null) {
-			return false;
+			return false; //TODO PREGUNTAR A PATRICIA SI ELIMINO LA GESTION DE AQUI
 
 			//Si existe tengo que ver si la elimino de Desactivadas o de activadas	
-		} else if (alarmasDesactivadas.equals(alarmaEliminar)) { //Borro de desactivadas TODO NO ESTÁ ELIMINANDOLAS
+		} else if (alarmasDesactivadas.equals(alarmaEliminar)) { //Borro de desactivadas
 			alarmasDesactivadas.remove(alarmaEliminar);
-			
-			/**System.out.println("DESACTIVADAS DESPUES: "+alarmasDesactivadas.size());
-			System.out.println("ACTIVAS DESPUES: "+alarmasActivas.size());**/
-			
 			return true;
-		} else { //Borro de activadas
-			alarmasActivas.remove(alarmaEliminar); 	//TODO NO ESTÁ ELIMINANDOLAS
 			
+		} else { //Borro de activadas
+			alarmasActivas.remove(alarmaEliminar); 
 			System.out.println("DESACTIVADAS DESPUES: "+alarmasDesactivadas.size());
 			System.out.println("ACTIVAS DESPUES: "+alarmasActivas.size());
-			
 			return true;
-		}
-
-
-		
+		}	
 	}
 
 	/**
@@ -187,18 +175,9 @@ public class Alarmas implements I_Alarmas {
 		//Metodo contains devuelve true si está la lista
 		boolean existe =alarmasDesactivadas.contains( alarmaActivar);
 		if (existe == true) {
-		
-			/**System.out.println("ACTIVO ALARMA");
-			System.out.println("DESACTIVADAS ANTES: "+alarmasDesactivadas.size());
-			System.out.println("ACTIVAS ANTES: "+alarmasActivas.size());**/
-
 			alarmasDesactivadas.remove(alarmaActivar); //Elimino de desactivas
 			alarmasActivas.add(alarmaActivar); //Anhado a activas
-
-			/**System.out.println("DESACTIVADAS DESPUES: "+alarmasDesactivadas.size());
-			System.out.println("ACTIVAS DESPUES: "+alarmasActivas.size());**/
 		}
-
 	}
 
 	/**
@@ -238,6 +217,10 @@ public class Alarmas implements I_Alarmas {
 		System.out.println("Acaba de apagar la alarma");
 		//alarmasActivas.poll();
 	}
+	
+	public void setObservador(IGUI_Alarmas o) {
+		interfaz = o;
+		}
 
 }
 

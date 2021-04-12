@@ -14,19 +14,24 @@ import patronState.I_Alarmas;
 
 public class AlarmasControlador {
 
+	//Variables privadas de la clase
 	private I_Alarmas alarmas;
 	private IGUI_Alarmas window;
 	private int indexModelTotal = 0;
 	private int indexModelActivas =0;
 	private int indexModelDesactivadas = 0;
 
+	//Constructor de la clase AlarmasControlador
 	public AlarmasControlador (I_Alarmas a, IGUI_Alarmas w) {
 
+		//Inicializo las variables de la vista y el modelo
 		alarmas = a;
 		window = w;
+		
+		alarmas.setObservador(window);
 
 		/**
-		 * Al hacer click sbre el boton de añadir alarma se llama a la clase NuevaAlarmaListener
+		 * Al hacer click sobre el boton de añadir alarma se llama a la clase NuevaAlarmaListener
 		 */
 		window.addNuevaAlarmaListener(new NuevaAlarmaListener()); 
 
@@ -37,9 +42,13 @@ public class AlarmasControlador {
 		window.addApagarAlarmaListener(new ApagarAlarmaListener());
 
 		window.addBorrarAlarmaListener (new BorrarAlarmaListener());
+		
+		
 
 	}
+	
 
+	//Clase listener de crear alarma CORRECTO (TODO COMPROBAR MISMA HORA DE ALARMAS)
 	public class NuevaAlarmaListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
@@ -51,37 +60,42 @@ public class AlarmasControlador {
 			//Gestión de errores en caso de que ya exita una alarma con ese id
 			if (alarmas.alarma(idAlarma)!= null) {
 				JOptionPane.showMessageDialog(null, "Alarma con id ya existente");
+
 				//Gestión de errores en caso de que el id no haya sido introducido lo notifico
 			} else if (idAlarma.equals("")) {
 				JOptionPane.showMessageDialog(null, "El id no puede estar vacío");
+
 				//Caso normal: creo la alarma y notifico al usuario
 			} else {
 
-				alarmas.nuevaAlarma(idAlarma, horaAlarma);
+				alarmas.nuevaAlarma(idAlarma, horaAlarma); //Creo la alarma
 				//Anhado el id de la alarma a las listas correspondientes
 				window.getModelListTotal().add(indexModelTotal , idAlarma);
 				window.getModelListActivas().add(indexModelActivas  , idAlarma);
 				//Aumento el contador de alarmas por lista
 				indexModelActivas++;
 				indexModelTotal++;
+
+				//Si no hay alarmas para activar desactivo el boton de activar
 				if(indexModelDesactivadas == 0) {
 					window.getBtnActivar().setEnabled(false);
+				}
+				if (indexModelActivas  != 0) {
+					window.getBtnBorrar().setEnabled(true);
+					window.getBtnDesactivar().setEnabled(true);
+				}
 				//Notifico al usuario de que se ha añadido la alarma correctamente
 				JOptionPane.showMessageDialog(null, "Alarma con id: "+ idAlarma+ " ha sido añadida correctamente");
-			}
-
-			//Finalmente, si no hay alarmas desactivadas, deshabilito el boton de activar alarmas
-
 			}
 		}
 	}
 
-
+	//Clase listener de borrar alarma REVISADO
 	public class BorrarAlarmaListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
 
-			//Declaro variable booleana auxiliar
+			//Declaro variable booleana (auxiliar para ver en que lista está la alarma a borrar)
 			boolean bool = false;
 			//Consigo el id de la alarma que he seleccionado
 			String selected = (String) window.getListAlarmasTotales().getSelectedValue();
@@ -111,9 +125,10 @@ public class AlarmasControlador {
 						indexModelActivas--;
 						JOptionPane.showMessageDialog(null, "Borrada de la lista de activas y de la lista de totales");
 						//Si al eliminarla no quedan más en activas, bloqueo el boton de desactivar
-						System.out.println(alarmas.alarmasActivas().length);
 						if (indexModelActivas == 0) {
 							window.getBtnDesactivar().setEnabled(false);
+						} else {
+							window.getBtnDesactivar().setEnabled(true);
 						}
 					} else { //Era una alarma desactivada
 						window.getModelListDesactivadas().removeElement(selected);
@@ -121,8 +136,10 @@ public class AlarmasControlador {
 						JOptionPane.showMessageDialog(null, "Borrada de la lista de desactivadas y de la lista de totales");
 						//Si al eliminarla no quedan más es desactivadas, bloqueo el boton de activar
 						//Si no hay alarmas desactivadas, deshabilito el boton de activar alarmas
-						if(indexModelDesactivadas == 0) {
+						if (indexModelDesactivadas == 0) {
 							window.getBtnActivar().setEnabled(false);
+						} else {
+							window.getBtnActivar().setEnabled(true);
 						}
 					}
 				}
@@ -132,10 +149,10 @@ public class AlarmasControlador {
 				}
 				alarmas.borraAlarma(selected); //Borro la alarma
 			}
-
 		}
 	}
 
+	//Clase Listener de desactivar alarma
 	public class AlarmaOffListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
@@ -147,25 +164,29 @@ public class AlarmasControlador {
 				JOptionPane.showMessageDialog(null, "No hay alarma seleccionada para desactivar");
 
 				//Caso normal: hay un id seleccionado, lo desactivo, elimino de la lista de activos, añado a desactivados y notifico al usuario
-			} else {
+			} else { //CUANDO DESACTIVO LA ULTIMA ERROR EN getHOra, alarma Mas proxima is null TODO
 				window.getModelListActivas().removeElement(selected);
 				indexModelActivas--;
 				window.getModelListDesactivadas().add(indexModelDesactivadas, selected);
 				indexModelDesactivadas++;
 
-				//La desactivo a efectos prácticos
+				//La desactivo en el modelo (metodo senhal)
 				alarmas.alarmaOff(selected);
 				//Activo el boton de activar, ya que al menos hay 1 alarma activa
 				window.getBtnActivar().setEnabled(true);
+				System.out.println("He llegado enable");
 				JOptionPane.showMessageDialog(null, "Alarma Desactivada correctamente");
 				//Compruebo si hay alguna alarma para desactivar, si no disable boton desactivar
 				if (indexModelActivas == 0) {
 					window.getBtnDesactivar().setEnabled(false);
+				} else {
+					window.getBtnDesactivar().setEnabled(true);
 				}
 			}
 		}
 	}
 
+	//Clase Listener de activar alarma
 	public class AlarmaOnListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
@@ -177,6 +198,7 @@ public class AlarmasControlador {
 
 				//Caso normal: hay un id seleccionado, lo activo, elimino de la lista de desactivadas, añado a activas y notifico al usuario
 			} else {
+
 				window.getModelListDesactivadas().removeElement(selected);
 				indexModelDesactivadas--;
 				window.getModelListActivas().add(indexModelActivas, selected);
@@ -184,45 +206,59 @@ public class AlarmasControlador {
 
 				//La activo a efectos prácticos
 				alarmas.alarmaOn(selected);
-				//Activo el boton de desactivar
+				//Activo el boton de desactivar, ya que al menos hay una activa
 				window.getBtnDesactivar().setEnabled(true);
 				JOptionPane.showMessageDialog(null, "Alarma Activada correctamente");
 				//Compruebo si hay alguna alarma para activar, si no disable boton activar
 				if (indexModelDesactivadas == 0) {
 					window.getBtnActivar().setEnabled(false);
+				} else {
+					window.getBtnActivar().setEnabled(true); //NO SERÍA NECESARIO, REVISAR TODO
 				}
 			}
 		}
 	}
 
+	//Anhadir a magicdraw implementacion MVC TODO
 
+	//Clase Listener de Apagar alarma
 	public class ApagarAlarmaListener implements ActionListener {
 
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent e) { //ESTOY APANGANDO ALARMAS QUE NO ESTAN SONANDO TODO
 
 
-			Alarma alarma= alarmas.alarmaMasProxima(); //CORRECTO NO DA FALLO ESTE ALARMA MÁS PROXIMA
+			Alarma alarma= alarmas.alarmaMasProxima(); //CORRECTO? NO DA FALLO ESTE ALARMA MÁS PROXIMA
 
 			if (alarma == null) {
 				JOptionPane.showMessageDialog(null, "No hay alarmas que apagar");
-			} else {
 
+			}else {
+				//TODO Gestionar apagar una que está desactivada HECHO
+				//Elimino de vistas de activas y total
 				window.getModelListActivas().removeElement(alarma.getId());
 				indexModelActivas--;
 				window.getModelListTotal().removeElement(alarma.getId());
 				indexModelTotal--;
 
-				alarmas.apagar(); //ESTA LLAMADA DA PROBLEMAS
+				alarmas.apagar(); //ESTA LLAMADA DA PROBLEMAS TODO
 				JOptionPane.showMessageDialog(null, "La alarma que estaba sonando ya está apagada");
 
-				if (indexModelActivas == 0) {
-					window.getBtnActivar().setEnabled(false);
-				}
-
 				if (indexModelTotal == 0) {
+					window.getBtnBorrar().setEnabled(false);
+					window.getBtnActivar().setEnabled(false);
+					window.getBtnDesactivar().setEnabled(false);
+					
+				} else if (indexModelActivas == 0) {
+					window.getBtnDesactivar().setEnabled(false);
+					
+				} else if (indexModelDesactivadas == 0){ 
 					window.getBtnActivar().setEnabled(false);
 				}
-			}
+			} //SI BORRO UNA ALARMA QUE ESTÁ SONANDO LUEGO NO PUEDO AÑADIRLA CON ESE ID TODO
 		}
 	}
+	
+	//TODO FALTA LISTENER DE QUE ESTÁ SONANDO LA ALARMA 
+	//DESACTIVO TODOS LOS BOTONES, ESPERO EL INTERVALO Y LLAMO A APAGAR, 
+	//EN CASO DE QUE DEN A APAGAR ANTES, ABORTO
 }

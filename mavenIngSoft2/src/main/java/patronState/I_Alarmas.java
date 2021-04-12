@@ -2,6 +2,8 @@ package patronState;
 
 import java.util.Date;
 
+import vista.IGUI_Alarmas;
+
 public interface I_Alarmas {
 
 	public void nuevaAlarma(String id, Date hora);
@@ -22,5 +24,6 @@ public interface I_Alarmas {
 	
 	public Alarma alarmaMasProxima();
 
+	public void setObservador(IGUI_Alarmas o);
 
 }

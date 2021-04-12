@@ -1,11 +1,8 @@
 package vista;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
-
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -13,35 +10,25 @@ import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerModel;
 import javax.swing.SwingConstants;
 import java.awt.Toolkit;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
-
 import javax.swing.border.LineBorder;
-import javax.swing.text.DateFormatter;
-import javax.swing.text.DefaultFormatterFactory;
+
+import patronState.Alarmas;
 
 import java.awt.Color;
 import javax.swing.JList;
-import javax.swing.JFormattedTextField;
-import patronState.*;
+import javax.swing.JOptionPane;
 
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.text.SimpleDateFormat;
+
 
 public class GUI_Alarmas implements IGUI_Alarmas{
 
 	private JFrame frmAplicacinAlarmas;
 	private JTextField textIdAlarmaNueva;
-	private Alarmas alarmas = new Alarmas();
 	private JButton btnCrearAlarma;
 	private JButton btnActivarAlarma;
 	private JButton btnDesactivarAlarma;
@@ -55,6 +42,7 @@ public class GUI_Alarmas implements IGUI_Alarmas{
 	private DefaultListModel modelListTotal;
 	private DefaultListModel modelListDesactivadas;
 	private DefaultListModel modelListActivas;
+	private Alarmas alarmas= new Alarmas();
 
 	public GUI_Alarmas() {
 		initialize();
@@ -64,6 +52,7 @@ public class GUI_Alarmas implements IGUI_Alarmas{
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		
 		//JFrame principal
 		frmAplicacinAlarmas = new JFrame();
 		frmAplicacinAlarmas.setTitle("Aplicaci\u00F3n Alarmas");
@@ -85,20 +74,24 @@ public class GUI_Alarmas implements IGUI_Alarmas{
 		panelNuevaAlarma.setBounds(20, 23, 254, 208);
 		panelCentral.add(panelNuevaAlarma);
 		panelNuevaAlarma.setLayout(null);
-		//Label de titulo
+		
+		//Label del titulo
 		JLabel lblCrearNuevaAlarma = new JLabel("CREAR NUEVA ALARMA");
 		lblCrearNuevaAlarma.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCrearNuevaAlarma.setBounds(0, 11, 254, 14);
 		panelNuevaAlarma.add(lblCrearNuevaAlarma);
+		
 		//Label de introduccion de id de la nueva alarma
 		JLabel lblIdNuevaAlarma = new JLabel("Id Alarma");
 		lblIdNuevaAlarma.setBounds(20, 65, 80, 14);
 		panelNuevaAlarma.add(lblIdNuevaAlarma);
+		
 		//Texto sin formateo para introducir el id
 		textIdAlarmaNueva = new JTextField();
 		textIdAlarmaNueva.setBounds(97, 62, 134, 20);
 		panelNuevaAlarma.add(textIdAlarmaNueva);
 		textIdAlarmaNueva.setColumns(10);
+		
 		//Label de introduccion de hora de la nueva alarma
 		JLabel lblHoralNuevaAlarma = new JLabel("Hora Alarma");
 		lblHoralNuevaAlarma.setBounds(20, 106, 77, 19);
@@ -110,19 +103,20 @@ public class GUI_Alarmas implements IGUI_Alarmas{
 		spinnerHoraAlarma.setEditor(new JSpinner.DateEditor(spinnerHoraAlarma, "HH:mm"));
 		spinnerHoraAlarma.setBounds(97, 105, 134, 20);
 		panelNuevaAlarma.add(spinnerHoraAlarma,  BorderLayout.NORTH);
-
-
+		
 		//Boton para crear la nueva alarma
 		btnCrearAlarma = new JButton("Crear");
 		btnCrearAlarma.setBounds(77, 174, 84, 23);
 		panelNuevaAlarma.add(btnCrearAlarma);
 
+		
 		//JPanel superior derecha donde se activan alarmas desactivadas
 		JPanel panelAlarmasActivar = new JPanel();
 		panelAlarmasActivar.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panelAlarmasActivar.setBounds(290, 23, 254, 208);
 		panelCentral.add(panelAlarmasActivar);
 		panelAlarmasActivar.setLayout(null);
+		
 		//Label del titulo del panel
 		JLabel lblActivarAlarma = new JLabel("ACTIVAR ALARMA");
 		lblActivarAlarma.setEnabled(true);
@@ -140,6 +134,7 @@ public class GUI_Alarmas implements IGUI_Alarmas{
 		listAlarmasDesactivadas = new JList(modelListDesactivadas);
 		listAlarmasDesactivadas.setBounds(20, 61, 213, 102);
 		panelAlarmasActivar.add(listAlarmasDesactivadas);
+		
 		//Boton para activar la alarma selecionada de la lista
 		btnActivarAlarma = new JButton("Activar");
 		btnActivarAlarma.setBounds(82, 174, 89, 23);
@@ -152,12 +147,14 @@ public class GUI_Alarmas implements IGUI_Alarmas{
 		panelAlarmasDesactivar.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panelAlarmasDesactivar.setBounds(290, 253, 254, 208);
 		panelCentral.add(panelAlarmasDesactivar);
+		
 		//Label del titulo del panel 
 		JLabel lblDesactivarAlarma = new JLabel("DESACTIVAR ALARMA");
 		lblDesactivarAlarma.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDesactivarAlarma.setEnabled(true);
 		lblDesactivarAlarma.setBounds(0, 11, 254, 14);
 		panelAlarmasDesactivar.add(lblDesactivarAlarma);
+		
 		//Label de seleccion de alarma
 		JLabel lblEligeAlarmaDesactivar = new JLabel("Elige alarma a desactivar");
 		lblEligeAlarmaDesactivar.setBounds(10, 36, 204, 14);
@@ -173,27 +170,31 @@ public class GUI_Alarmas implements IGUI_Alarmas{
 		btnDesactivarAlarma.setBounds(74, 174, 101, 23);
 		panelAlarmasDesactivar.add(btnDesactivarAlarma);
 
+		
 		//Jpanel inferior izquierda donde se borran las alarmas
 		JPanel panelBorrarAlarma = new JPanel();
 		panelBorrarAlarma.setLayout(null);
 		panelBorrarAlarma.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panelBorrarAlarma.setBounds(20, 253, 254, 208);
 		panelCentral.add(panelBorrarAlarma);
+		
 		//Label del titulo del panel
 		JLabel lblBorrarAlarma = new JLabel("BORRAR ALARMA");
 		lblBorrarAlarma.setHorizontalAlignment(SwingConstants.CENTER);
 		lblBorrarAlarma.setBounds(0, 11, 243, 14);
 		panelBorrarAlarma.add(lblBorrarAlarma);
+		
 		//Label de seleccion de alarma
 		JLabel lblEligeAlarmaBorrar = new JLabel("Elige alarma a borrar");
 		lblEligeAlarmaBorrar.setBounds(10, 36, 153, 19);
 		panelBorrarAlarma.add(lblEligeAlarmaBorrar);
+		
 		//Lista de donde se elije la alarma a borrar
-
 		modelListTotal = new DefaultListModel();
 		listAlarmasTotales= new JList(modelListTotal);
 		listAlarmasTotales.setBounds(20, 62, 212, 101);
 		panelBorrarAlarma.add(listAlarmasTotales);
+		
 		//Boton para borrar la alarma seleccionada de la lista
 		btnBorrarAlarma = new JButton("Borrar");
 		btnBorrarAlarma.setBounds(79, 174, 84, 23);
@@ -235,10 +236,9 @@ public class GUI_Alarmas implements IGUI_Alarmas{
 		Date aux = (Date) spinnerHoraAlarma.getValue();
 		horaDate.setHours(aux.getHours());
 		horaDate.setMinutes(aux.getMinutes());
-
 		return horaDate;
-
 	}
+	
 	public String getIdAlarma() {
 		String idAlarma = textIdAlarmaNueva.getText();
 		return idAlarma;
@@ -264,7 +264,6 @@ public class GUI_Alarmas implements IGUI_Alarmas{
 		return btnCrearAlarma;
 	}
 
-
 	public JList getListAlarmasActivas() {
 		return listAlarmasActivas;
 	}
@@ -284,8 +283,14 @@ public class GUI_Alarmas implements IGUI_Alarmas{
 	public DefaultListModel getModelListActivas() {
 		return modelListActivas;
 	}
+	
 	public DefaultListModel getModelListDesactivadas() {
 		return modelListDesactivadas;
 	}
+
+	public void update() {
+		JOptionPane.showMessageDialog(null, "Sonando Alarma");
+	}	
+	
 	
 }
