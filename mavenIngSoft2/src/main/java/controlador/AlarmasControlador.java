@@ -222,7 +222,7 @@ public class AlarmasControlador {
 	public class ApagarAlarmaListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
-
+			JOptionPane.getRootFrame().dispose();
 
 			Alarma alarma= alarmas.alarmaMasProxima(); //CORRECTO? NO DA FALLO ESTE ALARMA MÁS PROXIMA
 
@@ -237,7 +237,6 @@ public class AlarmasControlador {
 				indexModelTotal--;
 
 				alarmas.apagar();
-				JOptionPane.showMessageDialog(null, "La alarma que estaba sonando ya está apagada");
 
 				window.getBtnActivar().setEnabled(true);
 				window.getBtnBorrar().setEnabled(true);

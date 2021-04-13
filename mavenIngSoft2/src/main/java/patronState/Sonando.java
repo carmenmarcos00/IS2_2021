@@ -20,7 +20,7 @@ public class Sonando extends AlarmasState {
 		//Fin de acciones asociadas a la transicion
 		
 		context.setState(programado);
-		System.out.println("AHAHAHAHAA");
+		context.eliminaAlarma(context.alarmaMasProxima());
 		programado.entryAction(context);
 		programado.doAction(context);
 		
@@ -36,7 +36,7 @@ public class Sonando extends AlarmasState {
 		//Hacer que cuando expire el timer se elimine tambien de la lista
 		//y botones se restablezcan
 		context.desactivarMelodia();
-		context.eliminaAlarma(context.alarmaMasProxima());
+
 	}
 
 	public void doAction(Alarmas context) {

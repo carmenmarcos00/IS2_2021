@@ -1,4 +1,5 @@
 package patronState;
+import java.awt.Toolkit;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Date;
@@ -30,6 +31,10 @@ public class Alarmas implements I_Alarmas {
 		this.state = value;
 		if (value instanceof Sonando) { //Patrón observer
 			changeSupport.firePropertyChange("state",antiguo,value); //Notifico
+		}
+		if ( value instanceof Programado && antiguo instanceof Sonando) {
+			changeSupport.firePropertyChange("apagaAlarmaTimer",antiguo, value);
+			changeSupport.firePropertyChange("BorraDeList", antiguo, value);
 		}
 	}
 
@@ -171,6 +176,10 @@ public class Alarmas implements I_Alarmas {
 	 * @param alarmaActivar alarma ya existente que hay que activa
 	 */
 	public void activaAlarma (Alarma alarmaActivar) {
+		final Runnable sonido = (Runnable) Toolkit.getDefaultToolkit().getDesktopProperty("win.sound.exclamation");
+		if (sonido != null) {
+			sonido.run();
+		}
 		//Metodo contains devuelve true si está la lista
 		boolean existe =alarmasDesactivadas.contains( alarmaActivar);
 		if (existe == true) {
@@ -203,6 +212,8 @@ public class Alarmas implements I_Alarmas {
 	 */
 	public void activarMelodia() {
 		System.out.println("Sonando alarma");
+
+	
 	}
 
 	/**

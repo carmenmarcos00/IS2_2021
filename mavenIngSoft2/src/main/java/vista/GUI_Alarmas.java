@@ -34,7 +34,7 @@ import javax.swing.border.EtchedBorder;
 
 public class GUI_Alarmas implements IGUI_Alarmas, PropertyChangeListener{
 
-	
+
 	private JFrame frmAplicacinAlarmas;
 	private JTextField textIdAlarmaNueva;
 	private JButton btnCrearAlarma;
@@ -51,8 +51,10 @@ public class GUI_Alarmas implements IGUI_Alarmas, PropertyChangeListener{
 	private DefaultListModel modelListDesactivadas;
 	private DefaultListModel modelListActivas;
 	private I_Alarmas alarmas;
+	private JButton btnApagarAlarmaSpaguetti;
+	private JFrame frame;
 
-	
+
 	public GUI_Alarmas(I_Alarmas a) {
 		this.alarmas = a;
 		alarmas.addPropertyChangeListener(this);
@@ -63,7 +65,7 @@ public class GUI_Alarmas implements IGUI_Alarmas, PropertyChangeListener{
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		
+
 		//JFrame principal
 		frmAplicacinAlarmas = new JFrame();
 		frmAplicacinAlarmas.setTitle("Aplicaci\u00F3n Alarmas");
@@ -85,24 +87,24 @@ public class GUI_Alarmas implements IGUI_Alarmas, PropertyChangeListener{
 		panelNuevaAlarma.setBounds(20, 23, 254, 208);
 		panelCentral.add(panelNuevaAlarma);
 		panelNuevaAlarma.setLayout(null);
-		
+
 		//Label del titulo
 		JLabel lblCrearNuevaAlarma = new JLabel("CREAR NUEVA ALARMA");
 		lblCrearNuevaAlarma.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCrearNuevaAlarma.setBounds(0, 11, 254, 14);
 		panelNuevaAlarma.add(lblCrearNuevaAlarma);
-		
+
 		//Label de introduccion de id de la nueva alarma
 		JLabel lblIdNuevaAlarma = new JLabel("Id Alarma");
 		lblIdNuevaAlarma.setBounds(20, 65, 80, 14);
 		panelNuevaAlarma.add(lblIdNuevaAlarma);
-		
+
 		//Texto sin formateo para introducir el id
 		textIdAlarmaNueva = new JTextField();
 		textIdAlarmaNueva.setBounds(97, 62, 134, 20);
 		panelNuevaAlarma.add(textIdAlarmaNueva);
 		textIdAlarmaNueva.setColumns(10);
-		
+
 		//Label de introduccion de hora de la nueva alarma
 		JLabel lblHoralNuevaAlarma = new JLabel("Hora Alarma");
 		lblHoralNuevaAlarma.setBounds(20, 106, 77, 19);
@@ -114,38 +116,38 @@ public class GUI_Alarmas implements IGUI_Alarmas, PropertyChangeListener{
 		spinnerHoraAlarma.setEditor(new JSpinner.DateEditor(spinnerHoraAlarma, "HH:mm"));
 		spinnerHoraAlarma.setBounds(97, 105, 134, 20);
 		panelNuevaAlarma.add(spinnerHoraAlarma,  BorderLayout.NORTH);
-		
+
 		//Boton para crear la nueva alarma
 		btnCrearAlarma = new JButton("Crear");
 		btnCrearAlarma.setBounds(77, 174, 84, 23);
 		panelNuevaAlarma.add(btnCrearAlarma);
 
-		
+
 		//JPanel superior derecha donde se activan alarmas desactivadas
 		JPanel panelAlarmasActivar = new JPanel();
 		panelAlarmasActivar.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panelAlarmasActivar.setBounds(290, 23, 254, 208);
 		panelCentral.add(panelAlarmasActivar);
 		panelAlarmasActivar.setLayout(null);
-		
+
 		//Label del titulo del panel
 		JLabel lblActivarAlarma = new JLabel("ACTIVAR ALARMA");
 		lblActivarAlarma.setEnabled(true);
 		lblActivarAlarma.setHorizontalAlignment(SwingConstants.CENTER);
 		lblActivarAlarma.setBounds(0, 11, 243, 14);
 		panelAlarmasActivar.add(lblActivarAlarma);
-		
+
 		//Label de seleccion de alarma
 		JLabel lblEligeAlarmaActivar = new JLabel("Elige alarma a activar");
 		lblEligeAlarmaActivar.setBounds(10, 36, 138, 14);
 		panelAlarmasActivar.add(lblEligeAlarmaActivar);
-		
+
 		//Lista de donde se elije la alarma a activar
 		modelListDesactivadas = new DefaultListModel();
 		listAlarmasDesactivadas = new JList(modelListDesactivadas);
 		listAlarmasDesactivadas.setBounds(20, 61, 213, 102);
 		panelAlarmasActivar.add(listAlarmasDesactivadas);
-		
+
 		//Boton para activar la alarma selecionada de la lista
 		btnActivarAlarma = new JButton("Activar");
 		btnActivarAlarma.setBounds(82, 174, 89, 23);
@@ -158,19 +160,19 @@ public class GUI_Alarmas implements IGUI_Alarmas, PropertyChangeListener{
 		panelAlarmasDesactivar.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panelAlarmasDesactivar.setBounds(290, 253, 254, 208);
 		panelCentral.add(panelAlarmasDesactivar);
-		
+
 		//Label del titulo del panel 
 		JLabel lblDesactivarAlarma = new JLabel("DESACTIVAR ALARMA");
 		lblDesactivarAlarma.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDesactivarAlarma.setEnabled(true);
 		lblDesactivarAlarma.setBounds(0, 11, 254, 14);
 		panelAlarmasDesactivar.add(lblDesactivarAlarma);
-		
+
 		//Label de seleccion de alarma
 		JLabel lblEligeAlarmaDesactivar = new JLabel("Elige alarma a desactivar");
 		lblEligeAlarmaDesactivar.setBounds(10, 36, 204, 14);
 		panelAlarmasDesactivar.add(lblEligeAlarmaDesactivar);
-		
+
 		//Lista de donde se elije la alarma a desactivar
 		modelListActivas = new DefaultListModel();
 		listAlarmasActivas = new JList(modelListActivas);
@@ -181,31 +183,31 @@ public class GUI_Alarmas implements IGUI_Alarmas, PropertyChangeListener{
 		btnDesactivarAlarma.setBounds(74, 174, 101, 23);
 		panelAlarmasDesactivar.add(btnDesactivarAlarma);
 
-		
+
 		//Jpanel inferior izquierda donde se borran las alarmas
 		JPanel panelBorrarAlarma = new JPanel();
 		panelBorrarAlarma.setLayout(null);
 		panelBorrarAlarma.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panelBorrarAlarma.setBounds(20, 253, 254, 208);
 		panelCentral.add(panelBorrarAlarma);
-		
+
 		//Label del titulo del panel
 		JLabel lblBorrarAlarma = new JLabel("BORRAR ALARMA");
 		lblBorrarAlarma.setHorizontalAlignment(SwingConstants.CENTER);
 		lblBorrarAlarma.setBounds(0, 11, 243, 14);
 		panelBorrarAlarma.add(lblBorrarAlarma);
-		
+
 		//Label de seleccion de alarma
 		JLabel lblEligeAlarmaBorrar = new JLabel("Elige alarma a borrar");
 		lblEligeAlarmaBorrar.setBounds(10, 36, 153, 19);
 		panelBorrarAlarma.add(lblEligeAlarmaBorrar);
-		
+
 		//Lista de donde se elije la alarma a borrar
 		modelListTotal = new DefaultListModel();
 		listAlarmasTotales= new JList(modelListTotal);
 		listAlarmasTotales.setBounds(20, 62, 212, 101);
 		panelBorrarAlarma.add(listAlarmasTotales);
-		
+
 		//Boton para borrar la alarma seleccionada de la lista
 		btnBorrarAlarma = new JButton("Borrar");
 		btnBorrarAlarma.setBounds(79, 174, 84, 23);
@@ -217,6 +219,8 @@ public class GUI_Alarmas implements IGUI_Alarmas, PropertyChangeListener{
 		btnApagarAlarma.setBounds(214, 472, 137, 29);
 		btnApagarAlarma.setEnabled(false);
 		panelCentral.add(btnApagarAlarma);
+		btnApagarAlarmaSpaguetti = new JButton("Okay");
+
 	}
 
 	public void setVisible() {
@@ -236,8 +240,11 @@ public class GUI_Alarmas implements IGUI_Alarmas, PropertyChangeListener{
 	}
 
 	public void addApagarAlarmaListener (ActionListener apagarAlarma) {
+		btnApagarAlarmaSpaguetti.addActionListener(apagarAlarma);
 		btnApagarAlarma.addActionListener(apagarAlarma);
 	}
+
+
 	public void addBorrarAlarmaListener (ActionListener borrarAlarma) {
 		btnBorrarAlarma.addActionListener(borrarAlarma);
 	}
@@ -249,7 +256,7 @@ public class GUI_Alarmas implements IGUI_Alarmas, PropertyChangeListener{
 		horaDate.setMinutes(aux.getMinutes());
 		return horaDate;
 	}
-	
+
 	public String getIdAlarma() {
 		String idAlarma = textIdAlarmaNueva.getText();
 		return idAlarma;
@@ -289,21 +296,23 @@ public class GUI_Alarmas implements IGUI_Alarmas, PropertyChangeListener{
 	public JList getListAlarmasTotales() {
 		return listAlarmasTotales;
 	}
-	
+
 	public DefaultListModel getModelListTotal() {
 		return modelListTotal;
 	}
-	
+
 	public DefaultListModel getModelListActivas() {
 		return modelListActivas;
 	}
-	
+
 	public DefaultListModel getModelListDesactivadas() {
 		return modelListDesactivadas;
 	}
 
 	public void propertyChange(PropertyChangeEvent evt) {
 		if(evt.getPropertyName().equals("state")) {
+
+			FrameUtils.vibrate(this.frmAplicacinAlarmas);
 			JOptionPane.showMessageDialog(null, "Sonando la alarma");
 			btnApagarAlarma.setEnabled(true);
 			btnCrearAlarma.setEnabled(false);
@@ -311,5 +320,22 @@ public class GUI_Alarmas implements IGUI_Alarmas, PropertyChangeListener{
 			btnDesactivarAlarma.setEnabled(false);
 			btnActivarAlarma.setEnabled(false);
 		}
+
+		if(evt.getPropertyName().equals("apagaAlarmaTimer")) {
+
+			JOptionPane.showOptionDialog(null, "Alarma Apagada", "Alarma Apagada", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[] {btnApagarAlarmaSpaguetti}, btnApagarAlarmaSpaguetti);
+
+			FrameUtils.vibrate(this.frmAplicacinAlarmas);
+			btnApagarAlarma.setEnabled(false);
+			btnCrearAlarma.setEnabled(true);
+			btnBorrarAlarma.setEnabled(true);
+			btnDesactivarAlarma.setEnabled(true);
+			btnActivarAlarma.setEnabled(true); 
+		}
+
 	}	
+
+	public JFrame getFrame () {
+		return this.frmAplicacinAlarmas;
+	}
 }
