@@ -14,27 +14,23 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.util.Calendar;
 import java.util.Date;
-import javax.swing.border.LineBorder;
-
-import patronState.Alarmas;
 import patronState.I_Alarmas;
-
-import java.awt.Color;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EtchedBorder;
 
-
+/**
+ * Clase que implementa la interfaz y la ventana principal de la aplicación
+ * Implementa los métodos de la interfaz IGUI_Alarmas y PropertyChangeListener para el patrón Observer
+ * @author Carmen Marcos Sánchez de la Blanca
+ * @version 13/04/2021
+ */
 public class GUI_Alarmas implements IGUI_Alarmas, PropertyChangeListener{
 
-
+	//Fields privados de la clase
 	private JFrame frmAplicacinAlarmas;
 	private JTextField textIdAlarmaNueva;
 	private JButton btnCrearAlarma;
@@ -55,6 +51,10 @@ public class GUI_Alarmas implements IGUI_Alarmas, PropertyChangeListener{
 	private JFrame frame;
 
 
+	/**
+	 * Constructor de la clase
+	 * @param a objeto de la clase I_ALarmas
+	 */
 	public GUI_Alarmas(I_Alarmas a) {
 		this.alarmas = a;
 		alarmas.addPropertyChangeListener(this);
@@ -223,32 +223,52 @@ public class GUI_Alarmas implements IGUI_Alarmas, PropertyChangeListener{
 
 	}
 
+	/**
+	 * Método setter que hace visble el frame
+	 */
 	public void setVisible() {
 		frmAplicacinAlarmas.setVisible(true);
 	}
 
+	/**
+	 * Método actionListener cuando creo una nueva alarma pulsando el botón de nueva alarma
+	 */
 	public void addNuevaAlarmaListener (ActionListener nuevaAlarma) {
 		btnCrearAlarma.addActionListener(nuevaAlarma);
 	}
 
+	/**
+	 * Método actionListener cuando creo una nueva alarma pulsando el botón de activar alarma
+	 */
 	public void addAlarmaOnListener (ActionListener alarmaOn) {
 		btnActivarAlarma.addActionListener(alarmaOn);
 	}
 
+	/**
+	 * Método actionListener cuando desactivo una alarma pulsando el botón de desactivar alarma
+	 */
 	public void addAlarmaOffListener (ActionListener alarmaOff) {
 		btnDesactivarAlarma.addActionListener(alarmaOff);
 	}
 
+	/**
+	 * Método actionListener cuando apago una alarma pulsando el boton de apagar alarma
+	 */
 	public void addApagarAlarmaListener (ActionListener apagarAlarma) {
 		btnApagarAlarmaSpaguetti.addActionListener(apagarAlarma);
 		btnApagarAlarma.addActionListener(apagarAlarma);
 	}
 
-
+	/**
+	 * Método actionListener cuando borro una alarma pulsando el boton de borrar una alarma
+	 */
 	public void addBorrarAlarmaListener (ActionListener borrarAlarma) {
 		btnBorrarAlarma.addActionListener(borrarAlarma);
 	}
 
+	/**
+	 * Getter de hora de la alarma introducida para crear
+	 */
 	public Date getHoraAlarma () {
 		Date horaDate = new Date();
 		Date aux = (Date) spinnerHoraAlarma.getValue();
@@ -257,58 +277,97 @@ public class GUI_Alarmas implements IGUI_Alarmas, PropertyChangeListener{
 		return horaDate;
 	}
 
+	/**
+	 * Getter del id introducido para crear la alarma
+	 */
 	public String getIdAlarma() {
 		String idAlarma = textIdAlarmaNueva.getText();
 		return idAlarma;
 	}
 
+	/**
+	 * Getter del boton desactivar
+	 */
 	public JButton getBtnDesactivar() {
 		return btnDesactivarAlarma;
 	}
 
+	/**
+	 * Getter del botón activar
+	 */
 	public JButton getBtnActivar() {
 		return btnActivarAlarma;
 	}
 
+	/**
+	 * Getter del botón apagar
+	 */
 	public JButton getBtnApagar() {
 		return btnApagarAlarma;
 	}
 
+	/**
+	 * Getter del botón borrar alarma 
+	 */
 	public JButton getBtnBorrar() {
 		return btnBorrarAlarma;
 	}
 
+	/**
+	 * Getter del botón crear alarma
+	 */
 	public JButton getBtnCrear() {
 		return btnCrearAlarma;
 	}
 
+	/**
+	 * Getter de la lista de alarmas Activas
+	 */
 	@SuppressWarnings("rawtypes")
 	public JList getListAlarmasActivas() {
 		return listAlarmasActivas;
 	}
 
+	/**
+	 * Getter de la lista de alarmas desactivadas
+	 */
 	@SuppressWarnings("rawtypes")
 	public JList getListAlarmasDesactivadas() {
 		return listAlarmasDesactivadas;
 	}
 
+	/**
+	 * Getter de la lista de alarmas totales
+	 */
 	@SuppressWarnings("rawtypes")
 	public JList getListAlarmasTotales() {
 		return listAlarmasTotales;
 	}
 
+	/**
+	 * Getter del modelo de la lista total
+	 */
 	public DefaultListModel getModelListTotal() {
 		return modelListTotal;
 	}
 
+	/**
+	 * Getter del modelo de la lista de alarmas activas
+	 */
 	public DefaultListModel getModelListActivas() {
 		return modelListActivas;
 	}
 
+	/**
+	 * Getter del modelo de la lista de alarmas desactivadas
+	 */
 	public DefaultListModel getModelListDesactivadas() {
 		return modelListDesactivadas;
 	}
 
+	/**
+	 * Acciones asociadas a los eventos del observador
+	 */
 	public void propertyChange(PropertyChangeEvent evt) {
 		if(evt.getPropertyName().equals("state")) {
 
@@ -335,6 +394,10 @@ public class GUI_Alarmas implements IGUI_Alarmas, PropertyChangeListener{
 
 	}	
 
+	/**
+	 * Getter del frame principal de la aplicación
+	 * @return frmAplicacinAlarmas frame
+	 */
 	public JFrame getFrame () {
 		return this.frmAplicacinAlarmas;
 	}

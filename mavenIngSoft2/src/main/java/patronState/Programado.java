@@ -3,14 +3,20 @@ package patronState;
 import java.util.Date;
 import java.util.Timer;
 
-
+/**
+ * Clase que implementa los estados y transiciones asociadas al estado Programado, que hereda de AlarmasState
+ * @author Carmen Marcos Sánchez de la Blanca
+ * @version 13/04/2021
+ */
 public class Programado extends AlarmasState {
 	private Alarma alarmaMasProxima = null;
 	protected Timer timer = new Timer();
 	protected AlarmasTask alarmasTask;
 
 
-
+	/**
+	 * Redefinición del método alarmaOn de la clase AlarmasState para este estado
+	 */
 	@Override
 	public void alarmaOn(String id, Alarmas context) {
 		Programado programado =  (Programado) getEstadoProgramado();
@@ -22,12 +28,14 @@ public class Programado extends AlarmasState {
 		context.activaAlarma(alarmaActivar);
 		//Fin acciones asociadas a la transicion
 
-
 		programado.entryAction(context);//Cuando la activo, puede ser que sea la siguiente en sonar y tengo que reajustar el timer
 		programado.doAction(context);
 
 	}
 
+	/**
+	 * Redefinición del método alarmaOff de la clase AlarmasState para este estado
+	 */
 	@Override
 	public void alarmaOff(String id, Alarmas context) {
 
@@ -55,6 +63,9 @@ public class Programado extends AlarmasState {
 		}
 	}
 
+	/**
+	 * Redefinición del método nuevaAlarma de la clase AlarmasState para este estado
+	 */
 	@Override
 	public void nuevaAlarma(String id, Date hora, Alarmas context) {
 
@@ -76,6 +87,9 @@ public class Programado extends AlarmasState {
 		}
 	}
 
+	/**
+	 * Redefinición del método borraAlarma de la clase AlarmasState para este estado
+	 */
 	@Override
 	public void borraAlarma(String id, Alarmas context) {
 
@@ -101,9 +115,13 @@ public class Programado extends AlarmasState {
 		}
 	}
 
+	/**
+	 * Método con las acciones que hay que realizar siempre que se entre al estado Programado
+	 * @param context objeto de la clase Alarmas
+	 */
 	public void entryAction(Alarmas context) { //Compruebo que el timer le tenga la alarma masProxima
 		//Compruebo si ha cambiado la alarma más proxima
-		
+
 		if(context.alarmaMasProxima() == null) {//Si viene de estado sonando
 			alarmaMasProxima = null;
 		}else {
@@ -118,13 +136,20 @@ public class Programado extends AlarmasState {
 		}
 	}
 
-
+	/**
+	 * Método con las acciones que hay que realizar de manera reiterada mientras se este en el estado Programado
+	 * @param context objeto de la clase Alarmas
+	 */
 	public void doAction(Alarmas context) {
 		//No tiene implementacion
 		//Definicion para posible futura implementacion
 		//Mejora modularidad y comprension del codigo
 	}
 
+	/**
+	 * Método con las acciones que hay que realizar al abandonar el estado Programado
+	 * @param context objeto de la clase Alarmas
+	 */
 	public void exitAction(Alarmas context) {
 		//No tiene implementacion
 		//Definicion para posible futura implementacion

@@ -11,6 +11,11 @@ import javax.swing.JOptionPane;
 import patronState.Alarma;
 import patronState.I_Alarmas;
 
+/**
+ * Clase Alarmas Controlador. Es el controlador del MVC implementado.
+ * @author Carmen Marcos Sánchez de la Blanca
+ *@version 13/04/2021
+ */
 public class AlarmasControlador {
 
 	//Variables privadas de la clase
@@ -21,6 +26,11 @@ public class AlarmasControlador {
 	private int indexModelDesactivadas = 0;
 
 	//Constructor de la clase AlarmasControlador
+	/**
+	 * Constructor de la clase AlarmasControlador
+	 * @param a objeto de tipo I_Alarmas (Interfaz de la vista en MVC)
+	 * @param w objeto de tipo IGUI_Alarmas (nterfaz del modelo en MVC)
+	 */
 	public AlarmasControlador (I_Alarmas a, IGUI_Alarmas w) {
 
 		//Inicializo las variables de la vista y el modelo
@@ -28,23 +38,41 @@ public class AlarmasControlador {
 		window = w;
 
 		/**
-		 * Al hacer click sobre el boton de añadir alarma se llama a la clase NuevaAlarmaListener
+		 * Gestiona el listener al clickar en el botón de nuevaAlarma en la vista, llamando a la clase NuevaAlarmaListener
 		 */
 		window.addNuevaAlarmaListener(new NuevaAlarmaListener()); 
 
+		/**
+		 * Gestiona el listener al clickar en el botón de alarmaOn en la vista, llamando a la clase AlarmaOnListener
+		 */
 		window.addAlarmaOnListener(new AlarmaOnListener());
 
+		/**
+		 * Gestiona el listener al clickar en el botón alarmaOff en la vista, llamando a la clase AlarmaOffListener
+		 */
 		window.addAlarmaOffListener(new AlarmaOffListener());
 
+		/**
+		 * Gestiona el listener al clickar en el botón apagarAlarma en la vista, llamando a la clase ApagarAlarmaListener
+		 */
 		window.addApagarAlarmaListener(new ApagarAlarmaListener());
 
+		/**
+		 * Gestiona el listener al clickar en el botón borrarAlarma en la vista, llamando a la clase BorrarAlarmaListener
+		 */
 		window.addBorrarAlarmaListener (new BorrarAlarmaListener());
 	}
 
-
-	//Clase listener de crear alarma CORRECTO (TODO COMPROBAR MISMA HORA DE ALARMAS)
+	/**
+	 * Clase listener que maneja el evento que desencadena pulsar el botón de nueva alarma
+	 * @author Carmen Marcos Sánchez de la Blanca
+	 * @version 13/04/2021
+	 */
 	public class NuevaAlarmaListener implements ActionListener {
 
+		/**
+		 * Método que ejecuta la acción que se ejecuta al pulsar el botón de nueva alarma
+		 */
 		public void actionPerformed(ActionEvent e) {
 
 			//Consigo los parametros para crear la alarma
@@ -88,9 +116,16 @@ public class AlarmasControlador {
 		}
 	}
 
-	//Clase listener de borrar alarma REVISADO
+	/**
+	 * Clase listener que maneja el evento que desencadena pulsar el botón de borrar alarma
+	 * @author Carmen Marcos Sánchez de la Blanca
+	 * @version 13/04/2021
+	 */
 	public class BorrarAlarmaListener implements ActionListener {
 
+		/**
+		 * Método que ejecuta la acción que se ejecuta al pulsar el botón de borrar alarma
+		 */
 		public void actionPerformed(ActionEvent e) {
 
 			//Declaro variable booleana (auxiliar para ver en que lista está la alarma a borrar)
@@ -151,9 +186,16 @@ public class AlarmasControlador {
 		}
 	}
 
-	//Clase Listener de desactivar alarma
+	/**
+	 * Clase listener que maneja el evento que desencadena pulsar el botón de alarma off
+	 * @author Carmen Marcos Sánchez de la Blanca
+	 * @version 13/04/2021
+	 */
 	public class AlarmaOffListener implements ActionListener {
 
+		/**
+		 * Método que ejecuta la acción que se ejecuta al pulsar el botón de alarma off
+		 */
 		public void actionPerformed(ActionEvent e) {
 			//Consigo el id de la alarma que he seleccionado
 			String selected = (String) window.getListAlarmasActivas().getSelectedValue();
@@ -184,9 +226,16 @@ public class AlarmasControlador {
 		}
 	}
 
-	//Clase Listener de activar alarma
+	/**
+	 * Clase listener que maneja el evento que desencadena pulsar el botón de alarma off
+	 * @author Carmen Marcos Sánchez de la Blanca
+	 * @version 13/04/2021
+	 */
 	public class AlarmaOnListener implements ActionListener {
 
+		/**
+		 * Método que ejecuta la acción que se ejecuta al pulsar el botón de alarma on
+		 */
 		public void actionPerformed(ActionEvent e) {
 			//Consigo el id de la alarma que he seleccionado
 			String selected = (String) window.getListAlarmasDesactivadas().getSelectedValue();
@@ -197,7 +246,7 @@ public class AlarmasControlador {
 				//Caso normal: hay un id seleccionado, lo activo, elimino de la lista de desactivadas, añado a activas y notifico al usuario
 			} else if (alarmas.alarma(selected).getHora().before(new Date())){
 				JOptionPane.showMessageDialog(null, "La hora de activación ya ha pasado y la alarma no será activada. Se le recomienda que borre esta alarma");
-				
+
 			}else {
 
 				window.getModelListDesactivadas().removeElement(selected);
@@ -218,13 +267,19 @@ public class AlarmasControlador {
 		}
 	}
 
-	//Clase Listener de Apagar alarma
+	/**
+	 * Clase listener que maneja el evento que desencadena pulsar el botón de apagar alarma
+	 * @author Carmen Marcos Sánchez de la Blanca
+	 * @version 13/04/2021
+	 */
 	public class ApagarAlarmaListener implements ActionListener {
 
+		/**
+		 * Método que ejecuta la acción que se ejecuta al pulsar el botón de apagar alarma
+		 */
 		public void actionPerformed(ActionEvent e) {
 			JOptionPane.getRootFrame().dispose();
-
-			Alarma alarma= alarmas.alarmaMasProxima(); //CORRECTO? NO DA FALLO ESTE ALARMA MÁS PROXIMA
+			Alarma alarma= alarmas.alarmaMasProxima();
 
 			if (alarma == null) {
 				JOptionPane.showMessageDialog(null, "No hay alarmas que apagar");
@@ -246,7 +301,4 @@ public class AlarmasControlador {
 			} 
 		}
 	}
-
-	//DESACTIVO TODOS LOS BOTONES, ESPERO EL INTERVALO Y LLAMO A APAGAR, 
-	//EN CASO DE QUE DEN A APAGAR ANTES, ABORTO
 }

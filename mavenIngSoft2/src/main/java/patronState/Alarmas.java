@@ -1,5 +1,5 @@
 package patronState;
-import java.awt.Toolkit;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Date;
@@ -9,56 +9,87 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 
-
+/**
+ * Clase Alarmas que define los atributos, métodos y el comportamiento de todas las alarmas.
+ * Es el la clase del modelo que implementa los métodos de la interfaz I_Alarmas en el MVC
+ * @author Carmen Marcos Sánchez de la Blanca
+ * @version 13/04/2021
+ */
 public class Alarmas implements I_Alarmas {
 
+	//Atributos privados de la clase
 	private AlarmasState state;
 	private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);	//Patron observer con MVC
+	private PriorityQueue<Alarma> alarmasActivas = new PriorityQueue<Alarma>(); //Cola de prioridad de alarmas activas
+	private List< Alarma> alarmasDesactivadas = new LinkedList<Alarma>(); //Lista de las alarmas desactivadas
 
-	private PriorityQueue<Alarma> alarmasActivas = new PriorityQueue<Alarma>();
-	private List< Alarma> alarmasDesactivadas = new LinkedList<Alarma>();
-	
-	private final int INTERVALO_SONANDO = 5000; //	Intervalo de borrado de la alarma sonando
+	private final int INTERVALO_SONANDO = 5000; //Intervalo de borrado de la alarma sonando
 
-	//Constructor de la clase Alarmas
+	/**
+	 * Constructor de la clase alarmas
+	 */
 	public Alarmas() {
 		state = AlarmasState.init(this);
 	}
 
 	//Implementacion de los métodos de señal
+
+	/**
+	 * Setter del estado en el que se encuentra la aplicación de alarmas
+	 * @param value objeto de la clase AlarmasState
+	 */
 	public void setState(AlarmasState value) {
 		AlarmasState antiguo = this.state;
 		this.state = value;
 		if (value instanceof Sonando) { //Patrón observer
 			changeSupport.firePropertyChange("state",antiguo,value); //Notifico
 		}
-		if ( value instanceof Programado && antiguo instanceof Sonando) {
+		if ( value instanceof Programado && antiguo instanceof Sonando) { //Notifico
 			changeSupport.firePropertyChange("apagaAlarmaTimer",antiguo, value);
 			changeSupport.firePropertyChange("BorraDeList", antiguo, value);
 		}
 	}
 
+	/**
+	 * Método señal que implementarán los estados correspondiente mediante el patrónn State para añadir una alarma nueva
+	 */
 	public void nuevaAlarma(String id, Date hora) {
 		state.nuevaAlarma(id, hora, this);
 	}
 
+	/**
+	 * Método señal que implementarán los estados correspondientes mediante el patrón State para borrar una alarma
+	 */
 	public void borraAlarma(String id) {
 		state.borraAlarma(id, this);
 	}
 
+	/**
+	 * Método señal que implementarán los estados correspondientes mediante el patrón State para apagar una alarma
+	 */
 	public void apagar() {
 		state.apagar(this);
 	}
 
+	/**
+	 * Método señal que implementarán los estados correspondientes mediante el patrón State para desactivar una alarma
+	 */
 	public void alarmaOff(String id) {
 		state.alarmaOff(id, this);
 	}
+	
+	/**
+	 * Método señal que implementarán los estados correspondientes mediante el patrón State para activar una alarma
+	 */
 	public void alarmaOn(String id) {
 		state.alarmaOn(id, this);
 	}
 
 	//Implementacion de los método de negocio 
 
+	/**
+	 * Método que devuelve un array de Alarmas con las alarmas activas de la cola de prioridad
+	 */
 	public Alarma[] alarmasActivas () {
 
 		Alarma[] arr1 = new Alarma[alarmasActivas.size()];
@@ -66,15 +97,18 @@ public class Alarmas implements I_Alarmas {
 		return arr2;
 	}
 
+	/**
+	 * Método que devuelve un array de Alarmas con las alarmas desactivadas de la lista 
+	 */
 	public Alarma[] alarmasDesactivadas() {
 		Alarma[] arr1 = new Alarma[alarmasDesactivadas.size()];
 		Alarma[] arr2 = alarmasDesactivadas.toArray(arr1); 
 		return arr2;
 	}
-	
+
 	/**
 	 * Método que devuelve la alarma en función del id
-	 * @param id
+	 * @param id id de la alarma buscada
 	 * @return La alarma que tiene como identificador el string introducido
 	 */
 	public Alarma alarma(String id) {
@@ -102,7 +136,7 @@ public class Alarmas implements I_Alarmas {
 
 	/**
 	 * Añade una nueva alarma preparada para sonar.
-	 * @param alarmaAñadir
+	 * @param alarmaAñadir alarma que hay que añadir
 	 * @return true si se añade la alarma
 	 * @return false si ya había una alarma para esa hora
 	 */
@@ -110,9 +144,7 @@ public class Alarmas implements I_Alarmas {
 		Date hora = alarmaAnhadir.getHora();
 		Alarma alarmaMismaHora = null;
 
-		//TODO GESTION DE QUE YA EXISTA ALARMA A ESA HORA (PROPAGAR?? O IGNORO)
-		//Tengo que buscar dentro de las alarmas activas y dentro de las alarmas desactivas si ya 
-		//existe una alarma para esa hora
+
 		//Busco si hay alguna alarma con esa hora dentro de las alarmas activas (la cola)
 		for (Alarma alarm : alarmasActivas) { 
 			if (alarm.getHora().equals(hora)) {
@@ -135,7 +167,7 @@ public class Alarmas implements I_Alarmas {
 	}
 
 	/**
-	 * 
+	 * Método que elimina la alarma pasada como parámetro de entrada
 	 * @param alarmaEliminar alarma a eliminar 
 	 */
 	public boolean eliminaAlarma(Alarma alarmaEliminar) {
@@ -161,8 +193,8 @@ public class Alarmas implements I_Alarmas {
 	}
 
 	/**
-	 * Método que devuelve la alarma activa más próxima a sonar
-	 * @return alarma más próxima
+	 * Método que devuelve la alarma activa más próxima a sonar (sin eliminarla de la cola de prioridad)
+	 * @return alarmasActivas.peek() alarma más próxima
 	 */
 	public Alarma alarmaMasProxima() {
 		if(alarmasActivas.size() == 0) {
@@ -173,13 +205,10 @@ public class Alarmas implements I_Alarmas {
 
 	/**
 	 * Método que activa una alarma ya existente que estaba desactivada
-	 * @param alarmaActivar alarma ya existente que hay que activa
+	 * @param alarmaActivar alarma ya existente que hay que activar
 	 */
 	public void activaAlarma (Alarma alarmaActivar) {
-		final Runnable sonido = (Runnable) Toolkit.getDefaultToolkit().getDesktopProperty("win.sound.exclamation");
-		if (sonido != null) {
-			sonido.run();
-		}
+
 		//Metodo contains devuelve true si está la lista
 		boolean existe =alarmasDesactivadas.contains( alarmaActivar);
 		if (existe == true) {
@@ -193,18 +222,13 @@ public class Alarmas implements I_Alarmas {
 	 * @param alarmaDesactivar alarma que quiero desactivar
 	 */
 	public void desactivaAlarma(Alarma alarmaDesactivar) {
-		/**
-		System.out.println("DESACTIVO ALARMA");
-		System.out.println("DESACTIVADAS ANTES: "+alarmasDesactivadas.size());
-		System.out.println("ACTIVAS ANTES: "+alarmasActivas.size());**/
 
 		//Método remove devuelve true si ha logrado eliminar la alarma (comprobación implicita)
 		boolean existe = alarmasActivas.remove(alarmaDesactivar); //Elimino alarma de activas
 		if (existe == true) {
 			alarmasDesactivadas.add(alarmaDesactivar); //La anhado en desactivas
 		}
-		/**System.out.println("DESACTIVADAS DESPUES: "+alarmasDesactivadas.size());
-		System.out.println("ACTIVAS DESPUES: "+alarmasActivas.size());**/
+
 	}
 
 	/**
@@ -212,24 +236,27 @@ public class Alarmas implements I_Alarmas {
 	 */
 	public void activarMelodia() {
 		System.out.println("Sonando alarma");
-
-	
 	}
 
 	/**
 	 * Muestra por pantalla un texto que indica que se ha apagado la alarma
-	 * y lo elimina pasado 5 segundos
-	 * @throws InterruptedException
 	 */
 	public void desactivarMelodia() {
 		System.out.println("Acaba de apagar la alarma");
 	}
 
-	//Método que registra listeners
+	/**
+	 * Método que registra los listeners que se suscriben a cambios (patrón observer)
+	 */
 	public void addPropertyChangeListener (PropertyChangeListener listener){
 		changeSupport.addPropertyChangeListener(listener);
 	}
 
+	/**
+	 * Getter de la constante del intervalo de tiempo que estará sonando la alarma
+	 * @return INTERVALO_SONANDO intervalo de tiempo que estará sonando la alarma
+	 * Al pasar ese tiempo, se apaga la alarma automáticamente
+	 */
 	public int getIntervalo() {
 		return INTERVALO_SONANDO;
 	}
