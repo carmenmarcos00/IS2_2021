@@ -1,9 +1,0 @@
-# Archivos de  configuración de Eclipse Windows
-
-.metadata/
-.recommenders/
-.classpath.project
-.settings/
-
-# Directorios de artefactos generados en Maven
-target/
