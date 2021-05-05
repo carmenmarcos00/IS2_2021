@@ -1,4 +1,4 @@
-package practica4.seguros.vista;
+package es.unican.is2.seguros.vista;
 
 import java.awt.EventQueue;
 
@@ -33,7 +33,6 @@ public class SegurosGUI extends JFrame {
 	private JTextField txtPotencia;
 	private JTextField txtPrecio;
 
-
 	/**
 	 * Launch the application.
 	 */
@@ -63,27 +62,29 @@ public class SegurosGUI extends JFrame {
 		
 		txtFechaUltimoSiniestro = new JTextField();
 		txtFechaUltimoSiniestro.setText("dd/mm/yyyy");
-		txtFechaUltimoSiniestro.setName("txtFechaUltimoSiniestro");
+		txtFechaUltimoSiniestro.setName("txtFechaUltimoSiniestro"); //Set name
 		txtFechaUltimoSiniestro.setBounds(124, 8, 86, 20);
 		contentPane.add(txtFechaUltimoSiniestro);
 		txtFechaUltimoSiniestro.setColumns(10);
 		
-		JLabel lblSueldo = new JLabel("PRECIO");
-		lblSueldo.setBounds(10, 192, 126, 17);
-		contentPane.add(lblSueldo);
+		JLabel lblPrecio = new JLabel("PRECIO"); //lbl con nombre sin sentido (antes lblSueldo)
+		lblPrecio.setBounds(10, 192, 126, 17);
+		lblPrecio.setName("lblPrecio"); //Set name
+		contentPane.add(lblPrecio);
 		
 		txtPrecio = new JTextField();
-		txtPrecio.setName("txtPrecio");
+		txtPrecio.setName("txtPrecio");//Set name
 		txtPrecio.setBounds(109, 191, 208, 18);
 		contentPane.add(txtPrecio);
 		txtPrecio.setColumns(10);
 		
 		JButton btnCalcular = new JButton("CALCULAR");
-		btnCalcular.setName("btnCalcular");
+		btnCalcular.setName("btnCalcular"); //Set name
 		btnCalcular.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 				double precio=0.0;
+				
 				try {
 					LocalDate fechaUltimoSiniestro = LocalDate.parse(txtFechaUltimoSiniestro.getText(), formatter);
 					boolean minusvalia = btnMinusvalia.isSelected();
@@ -95,45 +96,47 @@ public class SegurosGUI extends JFrame {
 			    	txtPrecio.setText(Double.toString(precio));
 			    	
 				} catch (DatoIncorrectoException e) {
-					//txtPrecio.setText(Double.toString(precio));
-					txtPrecio.setText("DATO INTRODUCIDO INCORRECTO"); //TODO
-					
+					txtPrecio.setText("Dato introducido no valido");
+
 				} catch (DateTimeParseException e) {
 					txtPrecio.setText("La fecha no se pudo parsear");
 				}
-				
 			}
 		});
 		btnCalcular.setBounds(134, 144, 126, 29);
 		contentPane.add(btnCalcular);
 		
-		btnMinusvalia = new JRadioButton("Minusval\u00EDa");
+		btnMinusvalia = new JRadioButton("Minusvalia");
 		btnMinusvalia.setBounds(243, 93, 109, 23);
-		btnMinusvalia.setName("btnMinusvalia");
+		btnMinusvalia.setName("btnMinusvalia"); //Set name
 		contentPane.add(btnMinusvalia);
 		
 		comboCobertura = new JComboBox();
 		comboCobertura.setModel(new DefaultComboBoxModel(new String[] {"TODO_RIESGO", "TERCEROS_LUNAS", "TERCEROS"}));
+		comboCobertura.setName("comboCobertura"); //Set name
 		comboCobertura.setBounds(124, 44, 188, 23);
 		contentPane.add(comboCobertura);
 		
 		JLabel lblCobertura = new JLabel("Cobertura");
 		lblCobertura.setBounds(10, 50, 114, 14);
+		lblCobertura.setName("lblCobertura");	//Set name
 		contentPane.add(lblCobertura);
 		
 		JLabel lblPotencia = new JLabel("Potencia");
 		lblPotencia.setBounds(10, 104, 114, 17);
+		lblPotencia.setName("lblPotencia"); //Set name
 		contentPane.add(lblPotencia);
 		
 		txtPotencia = new JTextField();
 		txtPotencia.setText("75");
-		txtPotencia.setName("txtPotencia");
+		txtPotencia.setName("txtPotencia");	//Set name
 		txtPotencia.setColumns(10);
 		txtPotencia.setBounds(124, 101, 86, 20);
 		contentPane.add(txtPotencia);
 		
 		JLabel lblUltimoSiniestro = new JLabel("Ultimo Siniestro");
 		lblUltimoSiniestro.setBounds(10, 11, 114, 17);
+		lblUltimoSiniestro.setName("lblUltimoSiniestro");	//Set name 
 		contentPane.add(lblUltimoSiniestro);
 		
 	}

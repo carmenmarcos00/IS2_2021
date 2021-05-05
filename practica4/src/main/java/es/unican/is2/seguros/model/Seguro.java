@@ -22,16 +22,22 @@ public class Seguro  {
 	 * @param fechaUltimoSiniestro fecha del último siniestro del coche
 	 * @param potenciaCV potencia en cv del coche
 	 */
-	public Seguro(int potenciaCV, Cliente cliente, Cobertura cobertura) {
-		this.potenciaCV = potenciaCV;
-		this.cliente = cliente;
-		this.cobertura = cobertura;
+	public Seguro(int potenciaCV, Cliente cliente, Cobertura cobertura) throws DatoIncorrectoException {
+		
+		if (potenciaCV <= 0) {
+			throw new DatoIncorrectoException();
+		} else  {
+			this.potenciaCV = potenciaCV;
+			this.cliente = cliente;
+			this.cobertura = cobertura;
+		}
+
 	}
 
 
 	//Setters y getters
 	public LocalDate getFechaUltimoSiniestro() {
-		return fechaUltimoSiniestro;
+		return this.fechaUltimoSiniestro;
 	}
 
 	public void setFechaUltimoSiniestro(LocalDate fechaUltimoSiniestro) {
@@ -39,7 +45,15 @@ public class Seguro  {
 	}
 
 	public int getPotenciaCV() {
-		return potenciaCV;
+		return this.potenciaCV;
+	}
+	
+	public Cliente getCliente () {
+		return this.cliente;
+	}
+	
+	public Cobertura getCobertura() {
+		return this.cobertura;
 	}
 	
 
