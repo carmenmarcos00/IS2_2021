@@ -13,7 +13,6 @@ public class Seguro  {
 	//Atributos de la clase
 	private LocalDate fechaUltimoSiniestro ;
 	private int potenciaCV;
-	//¿NO SALEN EN EL DIAGRAMA DE CLASES?
 	private Cliente cliente;
 	private Cobertura cobertura;
 
@@ -22,17 +21,14 @@ public class Seguro  {
 	 * @param fechaUltimoSiniestro fecha del último siniestro del coche
 	 * @param potenciaCV potencia en cv del coche
 	 */
-	public Seguro(int potenciaCV, Cliente cliente, Cobertura cobertura) throws DatoIncorrectoException {
-		
-		if (potenciaCV <= 0) {
-			throw new DatoIncorrectoException();
-		} else  {
-			this.potenciaCV = potenciaCV;
-			this.cliente = cliente;
-			this.cobertura = cobertura;
-		}
+	public Seguro(int potenciaCV, Cliente cliente, Cobertura cobertura) {
 
+		this.potenciaCV = potenciaCV;
+		this.cliente = cliente;
+		this.cobertura = cobertura;
 	}
+
+
 
 
 	//Setters y getters
@@ -47,69 +43,68 @@ public class Seguro  {
 	public int getPotenciaCV() {
 		return this.potenciaCV;
 	}
-	
+
 	public Cliente getCliente () {
 		return this.cliente;
 	}
-	
+
 	public Cobertura getCobertura() {
 		return this.cobertura;
 	}
-	
+
 
 	public void setPotenciaCV(int potenciaCV) {
 		this.potenciaCV = potenciaCV;
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Método que me devuelve el precio base del seguro en función de la cobertura contratada
+	 * @return pbase precio base
 	 */
 	public double getPrecioBase () {
 
 		double pbase = 0;
 
-		if (this.cobertura.equals(Cobertura.TODO_RIESGO)) {
+		if (this.cobertura.equals(Cobertura.TODO_RIESGO)) { 			//Cobertura  = TODO_RIESGO
 			pbase = 1000;
 
-		} else if (this.cobertura.equals(Cobertura.TERCEROS_LUNAS)) {
+		} else if (this.cobertura.equals(Cobertura.TERCEROS_LUNAS)) { 	//Cobertura = TERCEROS LUNAS
 			pbase = 600;
 
-		}else if  (cobertura.equals(Cobertura.TERCEROS)) {
+		}else if  (cobertura.equals(Cobertura.TERCEROS)) {				//Cobertura = TERCEROS
 			pbase = 400;
 		}
 		return pbase;
 	}
 
 	/**
-	 * 
-	 * @return
-	 * @throws DatoIncorrectoException
+	 * Método que me devuelve la cifra a multiplicar sobre el precio base en funcion de la potencia del coche
+	 * @return multiplicador sobre el precio base del seguro
 	 */
 	public double getPorcentajeIncrementoPotencia()  {
 		double multiplicador = 0.0;
 
-		if (this.potenciaCV <= 0) { //(-infinito, 0]
+		if (this.potenciaCV <= 0) { 									//(-infinito, 0]
 			multiplicador = -1.0;
 
-		} else if (this.potenciaCV > 0 && this.potenciaCV < 90) { //(0, 90)
+		} else if (this.potenciaCV > 0 && this.potenciaCV < 90) { 		//(0, 90)
 			multiplicador = 1.0;
 
-		} else if (this.potenciaCV >= 90 && this.potenciaCV <= 110) { //[90-110]
+		} else if (this.potenciaCV >= 90 && this.potenciaCV <= 110) { 	//[90-110]
 			multiplicador = 1.05;
 
-		}else { //(110, +infinito)
+		}else { 														//(110, +infinito)
 			multiplicador = 1.20;
 		}
 		return multiplicador; 
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Método que calcula el precio extra del seguro en función de la fecha de último siiniestro
+	 * @return precio extrea
 	 */
 	public double getExtraSiniestralidad() {
-		
+
 		//Si despues de hoy, error
 		if (this.fechaUltimoSiniestro.isAfter(LocalDate.now())) {
 			return -1.0;
@@ -126,8 +121,8 @@ public class Seguro  {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Método que calcula la cifra por la que multiplicar el precio final del producto en función de minusvalía
+	 * @return multiplicador minusvalía
 	 */
 	public double getDescuentoMinusvalia() {
 
@@ -138,11 +133,11 @@ public class Seguro  {
 		}
 	}
 
-	//Método de negocio de la clase
+
 	/**
-	 * 
-	 * @return
-	 * @throws DatoIncorrectoException 
+	 * Método que calcula el precio final del seguro en función de los parámetros dados.
+	 * @return precio final del seguro
+	 * @throws DatoIncorrectoException En caso de que el dato introducido no sea válido (potencia == 0 | potencia <0  o fecha futura)
 	 */
 	public double precio() throws DatoIncorrectoException {
 
@@ -158,9 +153,9 @@ public class Seguro  {
 
 		//Calculo incremento por potencia del coche
 		multiplicadorPotencia = getPorcentajeIncrementoPotencia();
-		
+
 		if(multiplicadorPotencia == -1.0) {
-		      throw new DatoIncorrectoException(); 
+			throw new DatoIncorrectoException(); 
 		}
 
 		//Calculo el precio extra por siniestralidad

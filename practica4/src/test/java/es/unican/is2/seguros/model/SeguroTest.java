@@ -1,14 +1,18 @@
 package es.unican.is2.seguros.model;
 
 import static org.junit.Assert.*;
-
 import java.time.LocalDate;
-
 import org.junit.Before;
 import org.junit.Test;
+
+/**
+ * Clase test de los métodos de la clase seguro seguro() y precio()
+ * @author Carmen Marcos Sánchez de la Blanca
+ * @version 05/05/2021
+ */
 public class SeguroTest {
 
-	//Creo los seguros
+	//Creo los seguros para el test de precio()
 	Seguro sut1, sut2, sut3, sut4, sut5, sut6, sut7, sut8, sut9, sut1NV, sut2NV, sut3NV, sut4NV, sut5NV, sut6NV; 
 
 	@Before
@@ -26,24 +30,17 @@ public class SeguroTest {
 		//------------------------------------ previo a TEST PRECIO()----------------------------------------------------//
 
 		//Inicializo los seguros válidos
-		
-		try {
-			sut1 = new Seguro(1, clienteMinusvalido,todoRiesgo);
-			sut2 = new Seguro(89, clienteMinusvalido,tercerosLunas);
-			sut3 = new Seguro(45, clienteNoMinusvalido,terceros);
-			sut4 = new Seguro(90, clienteNoMinusvalido,todoRiesgo);
-			sut5 = new Seguro(110, clienteMinusvalido,tercerosLunas);
-			sut6 = new Seguro(100, clienteMinusvalido,terceros);
-			sut7 = new Seguro(111, clienteNoMinusvalido,todoRiesgo);
-			sut8 = new Seguro(100000, clienteNoMinusvalido,tercerosLunas);
-			sut9 = new Seguro(1, clienteMinusvalido,terceros);
+		sut1 = new Seguro(1, clienteMinusvalido,todoRiesgo);
+		sut2 = new Seguro(89, clienteMinusvalido,tercerosLunas);
+		sut3 = new Seguro(45, clienteNoMinusvalido,terceros);
+		sut4 = new Seguro(90, clienteNoMinusvalido,todoRiesgo);
+		sut5 = new Seguro(110, clienteMinusvalido,tercerosLunas);
+		sut6 = new Seguro(100, clienteMinusvalido,terceros);
+		sut7 = new Seguro(111, clienteNoMinusvalido,todoRiesgo);
+		sut8 = new Seguro(100000, clienteNoMinusvalido,tercerosLunas);
+		sut9 = new Seguro(1, clienteMinusvalido,terceros);
 
-		} catch (DatoIncorrectoException e) {
-			e.printStackTrace();
-		}
-
-
-		//Set de las fechas de siniestro validas
+		//Set de las fechas de siniestro de casos validos
 		sut1.setFechaUltimoSiniestro(LocalDate.now().minusYears(30));				//hoy - (30 años)
 		sut2.setFechaUltimoSiniestro(LocalDate.now().minusYears(3).minusDays(1));	//hoy -(3 años y un dia)
 		sut3.setFechaUltimoSiniestro(LocalDate.now().minusYears(4)); 				//hoy -(4 años)
@@ -56,15 +53,12 @@ public class SeguroTest {
 
 
 		//Inicializo los seguros no válidos
-
-			sut1NV = new Seguro(-2000, clienteMinusvalido,todoRiesgo);
-			sut2NV = new Seguro(0, clienteMinusvalido,tercerosLunas);
-			sut3NV = new Seguro(-50, clienteNoMinusvalido,terceros);
-			sut4NV = new Seguro(90, clienteNoMinusvalido,todoRiesgo);
-			sut5NV = new Seguro(110, clienteMinusvalido,tercerosLunas);
-			sut6NV = new Seguro(100, clienteMinusvalido,terceros);
-
-
+		sut1NV = new Seguro(-2000, clienteMinusvalido,todoRiesgo);
+		sut2NV = new Seguro(0, clienteMinusvalido,tercerosLunas);
+		sut3NV = new Seguro(-50, clienteNoMinusvalido,terceros);
+		sut4NV = new Seguro(90, clienteNoMinusvalido,todoRiesgo);
+		sut5NV = new Seguro(110, clienteMinusvalido,tercerosLunas);
+		sut6NV = new Seguro(100, clienteMinusvalido,terceros);
 
 		//Set de las fechas de siniestro de casos no validos
 		sut1NV.setFechaUltimoSiniestro(LocalDate.now().minusYears(30));				//hoy - (30 años)
@@ -79,46 +73,45 @@ public class SeguroTest {
 	@Test
 	public void testSeguro() {
 
-		//Creo los seguros para el test de seguros
-		try {
-			Seguro seg1 = new Seguro(1, new Cliente("Pepe", "1111", true), Cobertura.TODO_RIESGO);
-			assertTrue(seg1.getCliente().getMinusvalia() == true);
-			assertTrue(seg1.getPotenciaCV() == 1);
-			assertTrue(seg1.getCobertura() == Cobertura.TODO_RIESGO);
-			
-		} catch (DatoIncorrectoException e) {
-			e.printStackTrace();
-		}
-		try {
-			Seguro seg2 = new Seguro(300000, new Cliente("Pepe", "1111", false), Cobertura.TERCEROS_LUNAS);
-			assertTrue(seg2.getCliente().getMinusvalia() == false);
-			assertTrue(seg2.getPotenciaCV() == 300000);
-			assertTrue(seg2.getCobertura() == Cobertura.TERCEROS_LUNAS);
-		} catch (DatoIncorrectoException e) {
-			e.printStackTrace();
-		}
-		try {
-			Seguro seg3 = new Seguro(200, new Cliente("Pepe", "1111", true), Cobertura.TERCEROS);
-			assertTrue(seg3.getCliente().getMinusvalia() == true);
-			assertTrue(seg3.getPotenciaCV() == 200);
-			assertTrue(seg3.getCobertura() == Cobertura.TERCEROS);
-		} catch (DatoIncorrectoException e) {
-			e.printStackTrace();
-		}
+		//Creo los seguros para el test de seguros VÁLIDOS
+		Seguro seg1 = new Seguro(1, new Cliente("Pepe", "1111", true), Cobertura.TODO_RIESGO);
+		Seguro seg2 = new Seguro(300000, new Cliente("Pepe", "1111", false), Cobertura.TERCEROS_LUNAS);
+		Seguro seg3 = new Seguro(200, new Cliente("Pepe", "1111", true), Cobertura.TERCEROS);
 
 
+
+		//Test caso 1 VALIDO
+		assertTrue(seg1.getCliente().getMinusvalia() == true);
+		assertTrue(seg1.getPotenciaCV() == 1);
+		assertTrue(seg1.getCobertura() == Cobertura.TODO_RIESGO);
+
+		//Test caso 2 VALIDO
+		assertTrue(seg2.getCliente().getMinusvalia() == false);
+		assertTrue(seg2.getPotenciaCV() == 300000);
+		assertTrue(seg2.getCobertura() == Cobertura.TERCEROS_LUNAS);
+
+		//Test caso 3 VALIDO
+		assertTrue(seg3.getCliente().getMinusvalia() == true);
+		assertTrue(seg3.getPotenciaCV() == 200);
+		assertTrue(seg3.getCobertura() == Cobertura.TERCEROS);
+
+		//Puesto que en el constructor de la clase seguros no lanza la excepción DatoIncorrectoException
+		//Los casos de prueba no válidos definidos teóricamente no pueden ser implementados en este test
+		//Dicha excepcion solo la lanzo en el método precio().
+		//En caso de lanzar esta excepcion en el constructor, los casos de prueba no válidos de test de precio() no se realizarían correctamente
+		//Ya que esta excepcion ya se habría manejado en el constructor
+		//En mi caso, me he decantado por lanzar la excepcion en precio() debido a la mayor complejidad del código de la clase	
+
+		//Creo los seguros para el test de seguros NO VÁLIDOS
+		//Seguro seg1NV = new Seguro(-20000, new Cliente("Pepe", "1111", true), Cobertura.TODO_RIESGO);	//Caso 1
+		//Seguro seg2NV = new Seguro(0, new Cliente("Pepe", "1111", false), Cobertura.TERCEROS_LUNAS);	//Caso 2
+		//Seguro seg3NV = new Seguro(-50, new Cliente("Pepe", "1111", true), Cobertura.TERCEROS);		//Caso 3
 	}
 
 	@Test
 	public void testPrecio() {
 
-		//Casos de prueba válidos
-		try {
-			assertTrue(sut1.precio() == 750);
-		} catch (DatoIncorrectoException e1) {
-			e1.printStackTrace();
-		}
-
+		//CASOS DE PRUEBA VÁLIDOS
 		try { //Caso de prueba válido 1
 			assertTrue(sut1.precio() == 750);
 		} catch (DatoIncorrectoException e) {
@@ -181,21 +174,21 @@ public class SeguroTest {
 			sut1NV.precio();
 			fail("No se ha lanzado la excepción");
 		} catch(DatoIncorrectoException e) {
-			System.out.println("Ha ido bien 1");
+			System.out.println("Ha ido bien caso no válido 1");
 		}
 
 		try{
 			sut2NV.precio();
 			fail("No se ha lanzado la excepción");
 		} catch(DatoIncorrectoException e) {
-			System.out.println("Ha ido bien 2");
+			System.out.println("Ha ido bien caso no válido 2");
 		}
 
 		try{
 			sut3NV.precio();
 			fail("No se ha lanzado la excepción");
 		} catch(DatoIncorrectoException e) {
-			System.out.println("Ha ido bien 3");
+			System.out.println("Ha ido bien caso no válido 3");
 		}
 
 		try{
@@ -203,21 +196,21 @@ public class SeguroTest {
 			System.out.println(sut4NV.precio());
 			fail("No se ha lanzado la excepción");
 		} catch(DatoIncorrectoException e) {
-			System.out.println("Ha ido bien 4");
+			System.out.println("Ha ido bien caso no válido 4");
 		}
 
 		try{
 			sut5NV.precio();
 			fail("No se ha lanzado la excepción");
 		} catch(DatoIncorrectoException e) {
-			System.out.println("Ha ido bien 5");
+			System.out.println("Ha ido bien caso no válido 5");
 		}
 
 		try{
 			sut6NV.precio();
 			fail("No se ha lanzado la excepción");
 		} catch(DatoIncorrectoException e) {
-			System.out.println("Ha ido bien 6");
+			System.out.println("Ha ido bien caso no válido 6");
 		}
 	}
 }
