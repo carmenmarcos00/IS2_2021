@@ -3,8 +3,8 @@ package es.unican.is2.practica5;
 public abstract class Cuenta {
 	
 	//WMC DE LA CLASE: 2
-	//WMCn DE LA CLASE: 2/2 = 1
-	//CBO DE LA CLASE:	0  (no necesita a nadie), mirar luego quien le llama
+	//WMCn DE LA CLASE: 1
+	//CBO DE LA CLASE:	
 	//DIT DE LA CLASE:	0
 	//NOC DE LA CLASE:	2
 	//CCog DE LA CLASE:	0

@@ -38,13 +38,11 @@
 			<artifactId>fest-swing</artifactId>
 			<version>1.2.1</version>
 		</dependency>
-		
-		<dependency>
-			<groupId>es.unican.is2</groupId>
-			<artifactId>ListaOrdenada</artifactId>
-			<version>0.0.1</version>
-		</dependency>
-		
+
+
+		<!-- <dependency> <groupId>es.unican.is2</groupId> <artifactId>ListaOrdenada</artifactId> 
+			<version>0.0.1</version> </dependency> -->
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

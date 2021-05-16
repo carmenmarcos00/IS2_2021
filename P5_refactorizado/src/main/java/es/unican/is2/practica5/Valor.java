@@ -16,7 +16,6 @@ public class Valor {
 	
 	public Valor(String entidad, int numValores, double cotizacionActual) {  //WMC +1
 
-		super(); //??
 		this.entidad = entidad;
 		this.numValores = numValores;
 		this.cotizacionActual = cotizacionActual;

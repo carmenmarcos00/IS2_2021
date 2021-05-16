@@ -6,11 +6,11 @@ import java.util.List;
 public class Cliente {
 	
 	
-	//WMC DE LA CLASE:	1+1+6+1 = 9  
-	//WMCn DE LA CLASE:	9/3 = 3
-	//CBO DE LA CLASE:	
-	//DIT DE LA CLASE:	
-	//NOC DE LA CLASE:	
+	//WMC DE LA CLASE:	1+1+5+1 = 8
+	//WMCn DE LA CLASE:	8/4 = 2
+	//CBO DE LA CLASE:	3 (Cuenta, CuentaValores, CuentaAhorro, Valor)
+	//DIT DE LA CLASE:	0
+	//NOC DE LA CLASE:	0
 	//CCog DE LA CLASE:	10 
 	public String nombre;
 	public String calle;
@@ -19,7 +19,7 @@ public class Cliente {
 	public String telefono;
 	public String dni;
 	
-    private List<Cuenta> Cuentas = new LinkedList<Cuenta>();
+    private List<Cuenta> Cuentas = new LinkedList<Cuenta>(); //CBO crea objeto de tipo cuenta
 
  	public Cliente(String titular, String calle, String zip, String localidad, 
  			String telefono, String dni) {  //WMC +1  Ccog=0
@@ -37,13 +37,13 @@ public class Cliente {
 		this.localidad = localidad;
 	}
 	
-	public double getSaldoTotal() { //WMC +1  TOTAL DEL METODO = 6 Ccog = 10
+	public double getSaldoTotal() { //WMC +1  TOTAL DEL METODO = 5,  Ccog = 10
 		double total = 0.0;
 		for (Cuenta c: Cuentas) { //WMC +1  CCog +1
 			if (c instanceof CuentaAhorro) { //WMC +1    CCog +2
-				total += ((CuentaAhorro) c).getSaldo();
+				total += ((CuentaAhorro) c).getSaldo(); //CBO llama a método de cuenta ahorro
 			} else if (c instanceof CuentaValores)  {//WMC +1    CCog +3
-				for (Valor v: ((CuentaValores) c).getValores()) { //WMC +1    CCog + 4
+				for (Valor v: ((CuentaValores) c).getValores()) { //WMC +2    CCog + 4   CBO: Llama a metodo de cuenta valores
 					total += v.getCotizacionActual()*v.getNumValores();
 				}
 			}
